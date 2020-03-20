@@ -77,7 +77,7 @@ public struct Amount: Codable {
             throw AmountCalculationError.incompatibleAmountCurrency
         }
 
-        left = Amount(currency: currency, value: left.value - right.value)
+        left = Amount(currency: currency, value: left.value + right.value)
     }
 
     public static func - (left: Amount, right: Amount) throws -> Amount  {
@@ -86,7 +86,7 @@ public struct Amount: Codable {
             throw AmountCalculationError.incompatibleAmountCurrency
         }
 
-        return Amount(currency: currency, value: left.value + right.value)
+        return Amount(currency: currency, value: left.value - right.value)
     }
 
     public static func -= (left: inout Amount, right: Amount) throws {

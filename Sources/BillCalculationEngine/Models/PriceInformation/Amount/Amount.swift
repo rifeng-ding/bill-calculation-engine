@@ -19,25 +19,46 @@ public struct Amount: Codable {
     /// The value of the Amount.
     public let value: Decimal
 
-    /// Returns the currency as a String, if the two Amount object share the same currency.
+    /// Returns the currency as a String, if the two Amount objects share the same currency.
     ///
-    /// The currency of Amount that has 0 value is ignored.
-    /// When values of both object are 0, this method return the non-nil curreny, if there's any.
+    /// This method is used as the check to determine whehter it is safe to perform basic mathmatic operations
+    /// (e.g. +, -, etc.) between two Amount objects. The fundamental idea is:
+    /// if two Amount objects doesn't share the same currency, then they cannot be used
+    /// for a mathmatic operations.
+    ///
+    /// When at least one object has non-zero value, the currency of the zero value object is ignored.
+    ///
+    /// When both objects have 0 as value:
+    ///
+    /// 1. If only one of the objects has non-nil currency, then this currency is returned.
+    ///
+    /// 2. If both objects has non-nil currency: if the currency are the same, the this curreny will be returned;
+    /// otherwise, nil is returned.
+    ///
+    /// 3. If both objects has nil as currency, nil is returned.
+    ///
     /// - Parameters:
     ///   - left: An Amount object to compare
     ///   - right: Another Amount object to compare.
     public static func shareSameCurrency(between left: Amount, and right: Amount)-> String? {
-        let hasSameCurrency = left.currency == right.currency
-        let atLeastOneIsZero = left == .zero || right == .zero
 
-        guard hasSameCurrency || atLeastOneIsZero else {
-            return nil
+        if let leftCurrency = left.currency,
+            let rightCurrency = right.currency {
+
+            return leftCurrency == rightCurrency ? leftCurrency : nil
         }
 
-        return left.currency ?? right.currency
+        // then at least one of the Amount has nil as currency
+        let nilCurrencyAmount = left.currency == nil ? left : right
+        let nonNilCurrencyAmount = left.currency == nil ? right : left
+        guard nilCurrencyAmount.value == 0 else {
+            return nil
+        }
+        return nonNilCurrencyAmount.currency
     }
 
     public static var zero: Amount {
+
         return Amount(currency: nil, value: 0)
     }
 
@@ -56,7 +77,7 @@ public struct Amount: Codable {
             throw AmountCalculationError.incompatibleAmountCurrency
         }
 
-        left = Amount(currency: currency, value: left.value - right.value)
+        left = Amount(currency: currency, value: left.value + right.value)
     }
 
     public static func - (left: Amount, right: Amount) throws -> Amount  {
@@ -65,7 +86,7 @@ public struct Amount: Codable {
             throw AmountCalculationError.incompatibleAmountCurrency
         }
 
-        return Amount(currency: currency, value: left.value + right.value)
+        return Amount(currency: currency, value: left.value - right.value)
     }
 
     public static func -= (left: inout Amount, right: Amount) throws {

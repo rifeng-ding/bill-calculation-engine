@@ -8,7 +8,7 @@
 import Foundation
 
 public enum AmountCalculationError: Error {
-    /// Cannot perform calcuation between Amount objects that don't share the same currency.
+    /// Cannot perform calcuation between Amount objects that don't share the same currency, doesn't have currency at all.
     ///
     /// See the documentation in Amount for more details.
     case incompatibleAmountCurrency

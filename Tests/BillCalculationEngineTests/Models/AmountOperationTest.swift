@@ -25,9 +25,9 @@ final class AmountOperationTest: XCTestCase {
 
     override func setUp() {
 
-        self.cadAmountLarge = Amount(currency: Currency.cad.rawValue, value: intValueLarge)
-        self.cadAmountSmall = Amount(currency: Currency.cad.rawValue, value: intValueSmall)
-        self.usdAmountLarge = Amount(currency: Currency.usd.rawValue, value: intValueLarge)
+        self.cadAmountLarge = Amount(currency: Currency.cad.rawValue, value: self.intValueLarge)
+        self.cadAmountSmall = Amount(currency: Currency.cad.rawValue, value: self.intValueSmall)
+        self.usdAmountLarge = Amount(currency: Currency.usd.rawValue, value: self.intValueLarge)
     }
 
     func testValidAddition() {
@@ -43,7 +43,7 @@ final class AmountOperationTest: XCTestCase {
         }
 
         // Then
-        let decimalResult = intValueLarge + intValueSmall
+        let decimalResult = self.intValueLarge + self.intValueSmall
         XCTAssertEqual(additionResult?.value, decimalResult)
         XCTAssertEqual(additionResult?.currency, Currency.cad.rawValue)
         XCTAssertEqual(self.cadAmountLarge.value, decimalResult)
@@ -81,7 +81,7 @@ final class AmountOperationTest: XCTestCase {
         }
 
         // Then
-        let decimalResult = intValueLarge - intValueSmall
+        let decimalResult = self.intValueLarge - self.intValueSmall
         XCTAssertEqual(additionResult?.value, decimalResult)
         XCTAssertEqual(additionResult?.currency, Currency.cad.rawValue)
         XCTAssertEqual(self.cadAmountLarge.value, decimalResult)

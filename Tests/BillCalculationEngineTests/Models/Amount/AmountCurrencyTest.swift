@@ -13,11 +13,6 @@ final class AmountCurrencyTest: XCTestCase {
 
     let unimportantValue: Decimal = 5
 
-    private enum Currency: String {
-        case cad = "CAD"
-        case usd = "USD"
-    }
-
     // MARK: - Test cases for non-zero value
 
     /// When both Amount objects has non-nil currency and non-zero as value

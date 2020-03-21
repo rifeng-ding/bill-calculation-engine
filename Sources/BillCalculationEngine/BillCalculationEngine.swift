@@ -35,14 +35,14 @@ public class BillCalculationEngine {
         }
 
         for discount in discounts {
-            let (discountedAmount, newSubtotal) = try self.apply(discount: discount, on: subtotal)
-            guard discountedAmount > .zero else {
+            let result = try discount.apply(onSubtotal: subtotal)
+            guard result.discountedAmount > .zero else {
                 break
             }
             appliedDiscounts.append(discount)
             // since the totalDiscountedAmount is an accumulaton of discountedAmount, the force try is safe
-            try! totalDiscountedAmount += discountedAmount
-            subtotal = newSubtotal
+            try! totalDiscountedAmount += result.discountedAmount
+            subtotal = result.newSubtotal
         }
 
         return (appliedDiscounts, totalDiscountedAmount, subtotal)
@@ -56,34 +56,5 @@ public class BillCalculationEngine {
             try! taxAmount += product.taxAmount(for: taxes)
         }
         return taxAmount
-    }
-
-    // MARK: - Interanl Methods
-    // TODO: move to Discount?
-    // TODO: internal method throw public error seems a bit odd
-    internal static func apply(discount: Discount, on subtotal: Amount) throws -> (discountedAmount: Amount, newSubtotal: Amount) {
-
-        switch discount.type {
-        case .fixedAmount:
-            guard let discountAmount = discount.amount else {
-                return (.zero, subtotal)
-            }
-            guard let currency = Amount.shareSameCurrency(between: subtotal, and: discountAmount) else {
-                throw BillCalculationEngineErrror.invalidDiscountCurrency
-            }
-            // Since the above guard already checked the currency, here the force try is safe
-            let newSubtotal = subtotal > discountAmount ? (try! subtotal - discountAmount) : Amount(currency: currency, value: 0)
-            let discountedAmount = subtotal > discountAmount ? discountAmount : subtotal
-            return (discountedAmount, newSubtotal)
-
-        case .percentage:
-            guard let percentage = discount.percentage else {
-                return (.zero, subtotal)
-            }
-            let discountedAmount = subtotal.multiply(by: percentage)
-            // since the discountedAmount is derived from the subtotal, the force try is safe
-            let newSubtotal = try! subtotal - discountedAmount
-            return (discountedAmount, newSubtotal)
-        }
     }
 }

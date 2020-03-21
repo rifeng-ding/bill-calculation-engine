@@ -11,11 +11,6 @@ import BillCalculationEngine
 
 final class AmountComparableTest: XCTestCase {
 
-    private enum Currency: String {
-        case cad = "CAD"
-        case usd = "USD"
-    }
-
     let intValueLarge: Decimal = 10
     let intValueSmall: Decimal = 5
 

@@ -13,8 +13,8 @@ public func allTests() -> [XCTestCaseEntry] {
         testCase(ProductTest.allTests),
         // Identifiable
         testCase(IdentifiableTest.allTests),
-        // CaseDefaultTest
-        testCase(CaseDefaultTest.allTests),
+        // CaseDefaultCodableTest
+        testCase(CaseDefaultCodableTest.allTests),
         // BillCalculationEngine
         testCase(BillCalculationEngineTests.allTests)
     ]

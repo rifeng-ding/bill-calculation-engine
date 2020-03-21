@@ -17,7 +17,7 @@ internal struct DiscountApplyingResult {
 public struct Discount: Codable, Identifiable {
 
     /// Type of the discount
-    public enum `Type`: String, Codable, CaseDefault {
+    public enum `Type`: String, CaseDefaultCodable {
 
         public static var defaultCase: Discount.`Type` = .unknown
 

@@ -13,7 +13,34 @@ final class DiscountTest: XCTestCase {
 
     let cadAmount100 = Amount(currency: Currency.cad.rawValue, value: 100)
 
+    // MARK: Unknow Type Discount
+    func testUnknownTypeDiscount() {
+        // Give
+        let unknownTypeDiscount = Discount.unknown
+
+        // when
+        var result: DiscountApplyingResult?
+        do {
+           result = try unknownTypeDiscount.apply(onSubtotal: self.cadAmount100)
+        } catch {
+            XCTFail("Unexcepted error: \(error)")
+        }
+
+        // Then
+        XCTAssertEqual(result?.discountedAmount, .zero)
+        XCTAssertEqual(result?.newSubtotal, self.cadAmount100)
+    }
+
     // MARK: - Fixed Amount Discount
+    func testInitWithInvalidFixedAmount() {
+        // Give
+        let discount = Discount(fixedAmount: Amount(currency: Currency.cad.rawValue, value: -10))
+        // When
+        // Then
+        XCTAssertEqual(discount.type, .fixedAmount)
+        XCTAssertEqual(discount.amount, .zero)
+    }
+
     func testFixAmountLowerOrEqualThanSubtotal() {
         // Give
         let cadCurrency = Currency.cad.rawValue
@@ -90,6 +117,16 @@ final class DiscountTest: XCTestCase {
     }
 
     // MARK: - Percentage Discount
+
+    func testInitWithInvalidPercentage() {
+        // Give
+        let discount = Discount(percentage: 1.2)
+        // When
+        // Then
+        XCTAssertEqual(discount.type, .percentage)
+        XCTAssertEqual(discount.percentage, 1)
+    }
+
     func testPercentageWithNonZeroResult() {
         // Give
         let discount25Percent = Discount(percentage: 0.25)
@@ -112,7 +149,6 @@ final class DiscountTest: XCTestCase {
         // Give
         let oneCent = Amount(currency: Currency.cad.rawValue, value: 0.01)
         let discount25Percent = Discount(percentage: 0.25)
-        // when
         // When
         var result: DiscountApplyingResult?
         do {
@@ -126,12 +162,34 @@ final class DiscountTest: XCTestCase {
         XCTAssertEqual(result?.newSubtotal, .zero)
     }
 
+    // This test case may happen if the Discount is decoded from JSON
+    func testPercentageWithInvalidPercentage() {
+        // Give
+        let discount120Percentage = Discount(withAnyPercentage: 1.20)
+        // When
+        var result: DiscountApplyingResult?
+        do {
+            result = try discount120Percentage.apply(onSubtotal: self.cadAmount100)
+        } catch {
+            XCTFail("Unexcepted error: \(error)")
+        }
+        // Then
+        XCTAssertEqual(result?.discountedAmount, .zero)
+        XCTAssertEqual(result?.newSubtotal, self.cadAmount100)
+    }
+
     static var allTests = [
+        ("testUnknownTypeDiscount", testUnknownTypeDiscount),
+
+        ("testInitWithInvalidFixedAmount", testInitWithInvalidFixedAmount),
         ("testFixAmountLowerOrEqualThanSubtotal", testFixAmountLowerOrEqualThanSubtotal),
         ("testFixAmountBiggerThanSubtotal", testFixAmountBiggerThanSubtotal),
         ("testFixAmountWithInvalidCurrency", testFixAmountWithInvalidCurrency),
         ("testFixedAmountZeroDiscount", testFixedAmountZeroDiscount),
+
+        ("testInitWithInvalidPercentage", testInitWithInvalidPercentage),
         ("testPercentageWithNonZeroResult", testPercentageWithNonZeroResult),
-        ("testPercentageWithRoundingToZeroResult", testPercentageWithRoundingToZeroResult)
+        ("testPercentageWithRoundingToZeroResult", testPercentageWithRoundingToZeroResult),
+        ("testPercentageWithInvalidPercentage", testPercentageWithInvalidPercentage)
     ]
 }

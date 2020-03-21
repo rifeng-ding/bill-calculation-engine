@@ -17,9 +17,14 @@ internal struct DiscountApplyingResult {
 public struct Discount: Codable {
 
     /// Type of the discount
-    public enum `Type`: String, Codable {
-        /// The discount direclty reduce the
+    public enum `Type`: String, Codable, CaseDefault {
+
+        public static var defaultCase: Discount.`Type` = .unknown
+
+        case unknown
+        /// The discount direclty reduce the subtotal by a fixed amount.
         case fixedAmount
+        /// The discount reduece the subtotal by a given percentage.
         case percentage
     }
 
@@ -28,32 +33,68 @@ public struct Discount: Codable {
     public let percentage: Double?
 
     public init(fixedAmount: Amount) {
+
         self.type = .fixedAmount
         self.amount = fixedAmount > .zero ? fixedAmount : Amount(currency: fixedAmount.currency, value: 0)
         self.percentage = nil
     }
 
     public init(percentage: Double) {
+
         self.type = .percentage
-        self.percentage = percentage < 1 ? percentage : 1
+        self.percentage = (percentage > 0 && percentage < 1) ? percentage : 1
         self.amount = nil
     }
 
-    public init(from decoder: Decoder) throws {
 
-        let container = try decoder.container(keyedBy: CodingKeys.self)
+    /// Initialize a Discount object with all properties configable.
+    ///
+    /// This initializer in private, and it's mainly for unit test usage.
+    /// - Parameters:
+    ///   - type: the type of the discount
+    ///   - amount: the amount of the discount
+    ///   - percentage: the percentage of the discount
+    private init(type: `Type`, amount: Amount? = nil, percentage: Double? = nil) {
 
+        self.type = type
+        self.percentage = percentage
+        self.amount =  amount
+    }
+
+
+    /// Initialize an percentage discount with any percentage value.
+    ///
+    /// This initializer doesn't perform any check on the value percentage,
+    /// e.g. it even can be bigger than 1 or smaller than 0.
+    ///
+    /// This initialzer is for unit test purpose.
+    /// - Parameter anyPercentage: any percentage for the discount
+    internal init(withAnyPercentage anyPercentage: Double) {
+
+        self = Discount(type: .percentage, amount: nil, percentage: anyPercentage)
+    }
+
+    /// A convenient way to get an unknown type discount.
+    ///
+    /// This property is for unit test purpose.
+    internal static var unknown: Discount {
+
+        return Discount(type: .unknown)
     }
 
     // MARK: - Interanl Methods
     // TODO: internal method throw public error seems a bit odd
     internal func apply(onSubtotal subtotal: Amount) throws -> DiscountApplyingResult {
 
+        let defaultResult = DiscountApplyingResult(discountedAmount: .zero,
+                                                   newSubtotal: subtotal)
         switch self.type {
+        case .unknown:
+            return defaultResult
+            
         case .fixedAmount:
             guard let discountAmount = self.amount, discountAmount > .zero else {
-                return DiscountApplyingResult(discountedAmount: .zero,
-                                              newSubtotal: subtotal)
+                return defaultResult
             }
             guard let currency = Amount.shareSameCurrency(between: subtotal, and: discountAmount) else {
                 throw BillCalculationEngineErrror.invalidDiscountCurrency
@@ -66,8 +107,7 @@ public struct Discount: Codable {
 
         case .percentage:
             guard let percentage = self.percentage, percentage > 0 && percentage < 1 else {
-                return DiscountApplyingResult(discountedAmount: .zero,
-                                              newSubtotal: subtotal)
+                return defaultResult
             }
             let discountedAmount = subtotal.multiply(by: percentage)
             guard discountedAmount != .zero else {

@@ -7,8 +7,9 @@
 
 import Foundation
 
-public struct Tax: Codable {
+public struct Tax: Codable, Identifiable {
 
+    public let identifier: String
     public let name: String
     public let percentage: Double
     public let isEabled: Bool

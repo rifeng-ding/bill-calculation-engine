@@ -7,15 +7,22 @@
 
 import Foundation
 
-public struct Product: Codable {
+public struct Product: Codable, Identifiable {
+
+    public let identifier: String
     public let name: String
     public let category: ProductCategory
     public let price: Amount
+    public let isTaxExempt: Bool
 
     public func taxAmount(for taxes: [Tax]) -> Amount {
 
+        guard !self.isTaxExempt else {
+            return Amount(currency: self.price.currency, value: 0)
+        }
+
         var taxAmount = Amount.zero
-        for tax in taxes {
+        for tax in taxes where tax.isEabled {
             if let applicableCategories = tax.applicableCategories,
                 !applicableCategories.contains(self.category) {
                 continue

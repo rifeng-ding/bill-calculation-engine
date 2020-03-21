@@ -14,7 +14,7 @@ internal struct DiscountApplyingResult {
     let newSubtotal: Amount
 }
 
-public struct Discount: Codable {
+public struct Discount: Codable, Identifiable {
 
     /// Type of the discount
     public enum `Type`: String, Codable, CaseDefault {
@@ -28,19 +28,22 @@ public struct Discount: Codable {
         case percentage
     }
 
+    public let identifier: String
     public let type: `Type`
     public let amount: Amount?
     public let percentage: Double?
 
-    public init(fixedAmount: Amount) {
+    public init(identifier: String, fixedAmount: Amount) {
 
+        self.identifier = identifier
         self.type = .fixedAmount
         self.amount = fixedAmount > .zero ? fixedAmount : Amount(currency: fixedAmount.currency, value: 0)
         self.percentage = nil
     }
 
-    public init(percentage: Double) {
+    public init(identifier: String, percentage: Double) {
 
+        self.identifier = identifier
         self.type = .percentage
         self.percentage = (percentage > 0 && percentage < 1) ? percentage : 1
         self.amount = nil
@@ -54,8 +57,9 @@ public struct Discount: Codable {
     ///   - type: the type of the discount
     ///   - amount: the amount of the discount
     ///   - percentage: the percentage of the discount
-    private init(type: `Type`, amount: Amount? = nil, percentage: Double? = nil) {
+    private init(identifier: String, type: `Type`, amount: Amount? = nil, percentage: Double? = nil) {
 
+        self.identifier = identifier
         self.type = type
         self.percentage = percentage
         self.amount =  amount
@@ -69,9 +73,9 @@ public struct Discount: Codable {
     ///
     /// This initialzer is for unit test purpose.
     /// - Parameter anyPercentage: any percentage for the discount
-    internal init(withAnyPercentage anyPercentage: Double) {
+    internal init(identifier: String, withAnyPercentage anyPercentage: Double) {
 
-        self = Discount(type: .percentage, amount: nil, percentage: anyPercentage)
+        self = Discount(identifier: identifier, type: .percentage, amount: nil, percentage: anyPercentage)
     }
 
     /// A convenient way to get an unknown type discount.
@@ -79,7 +83,7 @@ public struct Discount: Codable {
     /// This property is for unit test purpose.
     internal static var unknown: Discount {
 
-        return Discount(type: .unknown)
+        return Discount(identifier:"", type: .unknown)
     }
 
     // MARK: - Interanl Methods

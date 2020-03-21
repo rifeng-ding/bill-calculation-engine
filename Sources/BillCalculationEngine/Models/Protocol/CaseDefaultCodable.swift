@@ -7,12 +7,12 @@
 
 import Foundation
 
-/// Provides a way of assigning a default value to an enum
+/// Provides a way of assigning a default value to an codable enum
 /// via a non-failable initializer and decoder implementation.
 ///
-/// With the included default implemntations, Codable enum will
-/// fallback to the provided `defaultCase`, when the raw value in the JSON
-/// is not equal to any case's raw value.
+/// With the included default implemntations, codable enum will
+/// fallback to the specified `defaultCase`, when the raw value in the JSON
+/// doesn't match any case's raw value defined in the enum.
 public protocol CaseDefaultCodable: RawRepresentable, Codable where RawValue: Codable & Equatable {
 
     /// The case of the enum that should be considered "default"

@@ -11,11 +11,6 @@ import BillCalculationEngine
 
 final class AmountOperationTest: XCTestCase {
 
-    private enum Currency: String {
-        case cad = "CAD"
-        case usd = "USD"
-    }
-
     let intValueLarge: Decimal = 10
     let intValueSmall: Decimal = 5
 
@@ -39,7 +34,7 @@ final class AmountOperationTest: XCTestCase {
             additionResult = try self.cadAmountLarge + self.cadAmountSmall
             try self.cadAmountLarge += self.cadAmountSmall
         } catch {
-            XCTFail()
+            XCTFail("Unexcepted error: \(error)")
         }
 
         // Then

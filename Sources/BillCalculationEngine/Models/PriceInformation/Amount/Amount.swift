@@ -7,8 +7,6 @@
 
 import Foundation
 
-// TODO: handle Currency
-
 public struct Amount: Codable {
 
     static private let currencyFractionDigits = 2
@@ -117,4 +115,3 @@ public struct Amount: Codable {
         return self.multiply(by: 1 / Double(divisor))
     }
 }
-

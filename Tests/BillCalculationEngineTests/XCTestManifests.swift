@@ -9,6 +9,8 @@ public func allTests() -> [XCTestCaseEntry] {
         testCase(AmountComparableTest.allTests),
         // Discount
         testCase(DiscountTest.allTests),
+        // Product
+        testCase(ProductTest.allTests),
         testCase(BillCalculationEngineTests.allTests)
     ]
 }

@@ -15,7 +15,7 @@ public struct Product: Codable {
     public func taxAmount(for taxes: [Tax]) -> Amount {
 
         var taxAmount = Amount.zero
-        for tax in taxes {
+        for tax in taxes where tax.isEabled {
             if let applicableCategories = tax.applicableCategories,
                 !applicableCategories.contains(self.category) {
                 continue

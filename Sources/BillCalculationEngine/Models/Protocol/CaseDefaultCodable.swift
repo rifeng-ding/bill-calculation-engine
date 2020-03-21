@@ -7,21 +7,26 @@
 
 import Foundation
 
-/// Provides a way of assigning a default value to an enum via a non-failable initializer and decoder implementation.
-public protocol CaseDefault: RawRepresentable where RawValue: Codable & Equatable {
+/// Provides a way of assigning a default value to an codable enum
+/// via a non-failable initializer and decoder implementation.
+///
+/// With the included default implemntations, codable enum will
+/// fallback to the specified `defaultCase`, when the raw value in the JSON
+/// doesn't match any case's raw value defined in the enum.
+public protocol CaseDefaultCodable: RawRepresentable, Codable where RawValue: Codable & Equatable {
 
     /// The case of the enum that should be considered "default"
     static var defaultCase: Self { get }
 }
 
-extension CaseDefault {
+public extension CaseDefaultCodable {
 
     /// Returns an initialized enum case or the specified default value.
     ///
     /// - Parameters:
     ///   - rawValue: the rawValue of the initialized enum
     ///   - default: if the rawValue does not produce an enum, this value is initialized instead
-    public init(rawValue: RawValue, default: Self = defaultCase) {
+    init(rawValue: RawValue, default: Self = defaultCase) {
 
         self = Self(rawValue: rawValue) ?? `default`
         if self == `default` {
@@ -30,7 +35,7 @@ extension CaseDefault {
     }
 
     /// Decoder that calls the intializer with default value
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
 
         let rawValue = try decoder.singleValueContainer().decode(RawValue.self)
         self = Self(rawValue: rawValue)

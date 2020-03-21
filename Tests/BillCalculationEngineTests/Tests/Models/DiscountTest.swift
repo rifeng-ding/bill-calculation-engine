@@ -34,7 +34,8 @@ final class DiscountTest: XCTestCase {
     // MARK: - Fixed Amount Discount
     func testInitWithInvalidFixedAmount() {
         // Give
-        let discount = Discount(fixedAmount: Amount(currency: Currency.cad.rawValue, value: -10))
+        let discount = Discount(identifier:"11111",
+                                fixedAmount: Amount(currency: Currency.cad.rawValue, value: -10))
         // When
         // Then
         XCTAssertEqual(discount.type, .fixedAmount)
@@ -44,8 +45,10 @@ final class DiscountTest: XCTestCase {
     func testFixAmountLowerOrEqualThanSubtotal() {
         // Give
         let cadCurrency = Currency.cad.rawValue
-        let discountCad50 = Discount(fixedAmount: Amount(currency: cadCurrency, value: 50))
-        let discountCad100 = Discount(fixedAmount: Amount(currency: cadCurrency, value: 100))
+        let discountCad50 = Discount(identifier:"11111",
+                                     fixedAmount: Amount(currency: cadCurrency, value: 50))
+        let discountCad100 = Discount(identifier:"22222",
+                                      fixedAmount: Amount(currency: cadCurrency, value: 100))
 
         // When
         var resultDiscount50: DiscountApplyingResult?
@@ -71,7 +74,8 @@ final class DiscountTest: XCTestCase {
         // Give
         let cadCurrency = Currency.cad.rawValue
         let amountCad200 = Amount(currency: cadCurrency, value: 200)
-        let discountCad200 = Discount(fixedAmount: amountCad200)
+        let discountCad200 = Discount(identifier:"11111",
+                                      fixedAmount: amountCad200)
 
         // When
         var result: DiscountApplyingResult?
@@ -88,7 +92,8 @@ final class DiscountTest: XCTestCase {
 
     func testFixAmountWithInvalidCurrency() {
         // Give
-        let discountUSD20 = Discount(fixedAmount: Amount(currency: Currency.usd.rawValue, value: 20))
+        let discountUSD20 = Discount(identifier:"11111",
+                                     fixedAmount: Amount(currency: Currency.usd.rawValue, value: 20))
 
         do {
             // When
@@ -101,7 +106,8 @@ final class DiscountTest: XCTestCase {
 
     func testFixedAmountZeroDiscount() {
         // Give
-        let discountCad0 = Discount(fixedAmount: .zero)
+        let discountCad0 = Discount(identifier:"11111",
+                                    fixedAmount: Amount(currency: Currency.cad.rawValue, value: 0))
 
         // When
         var result: DiscountApplyingResult?
@@ -120,7 +126,8 @@ final class DiscountTest: XCTestCase {
 
     func testInitWithInvalidPercentage() {
         // Give
-        let discount = Discount(percentage: 1.2)
+        let discount = Discount(identifier:"11111",
+                                percentage: 1.2)
         // When
         // Then
         XCTAssertEqual(discount.type, .percentage)
@@ -129,7 +136,8 @@ final class DiscountTest: XCTestCase {
 
     func testPercentageWithNonZeroResult() {
         // Give
-        let discount25Percent = Discount(percentage: 0.25)
+        let discount25Percent = Discount(identifier:"11111",
+                                         percentage: 0.25)
         // when
         // When
         var result: DiscountApplyingResult?
@@ -148,7 +156,8 @@ final class DiscountTest: XCTestCase {
     func testPercentageWithRoundingToZeroResult() {
         // Give
         let oneCent = Amount(currency: Currency.cad.rawValue, value: 0.01)
-        let discount25Percent = Discount(percentage: 0.25)
+        let discount25Percent = Discount(identifier:"11111",
+                                         percentage: 0.25)
         // When
         var result: DiscountApplyingResult?
         do {
@@ -165,7 +174,8 @@ final class DiscountTest: XCTestCase {
     // This test case may happen if the Discount is decoded from JSON
     func testPercentageWithInvalidPercentage() {
         // Give
-        let discount120Percentage = Discount(withAnyPercentage: 1.20)
+        let discount120Percentage = Discount(identifier:"11111",
+                                             withAnyPercentage: 1.20)
         // When
         var result: DiscountApplyingResult?
         do {

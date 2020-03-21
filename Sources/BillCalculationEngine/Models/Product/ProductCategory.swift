@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ProductCategory: String, Codable, CaseDefault{
+public enum ProductCategory: String, CaseDefaultCodable{
 
     public static var defaultCase: ProductCategory = .unknown
 

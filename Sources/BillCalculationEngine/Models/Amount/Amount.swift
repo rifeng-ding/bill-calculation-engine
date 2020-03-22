@@ -30,6 +30,11 @@ public struct Amount: Codable {
         self._value = value
     }
 
+    enum codingKeys: String, CodingKey {
+        case currency
+        case _value = "value"
+    }
+
 
     /// Returns the currency as a String, if the two Amount objects share the same currency.
     ///

@@ -16,7 +16,7 @@ public struct Amount: Codable {
 
     /// The value of the Amount.
     ///
-    /// When the value is not included in the JSON payload, 0 is returned.
+    /// The default value is 0.
     public var value: Decimal {
 
         if let valueInDecimal = self.valueInDecimal {
@@ -30,7 +30,7 @@ public struct Amount: Codable {
     internal var valueInString: String?
     internal var valueInDecimal: Decimal?
 
-    init(currency: String?, value: Decimal?) {
+    public init(currency: String?, value: Decimal?) {
         self.currency = currency
         self.valueInDecimal = value
         self.valueInString = nil

@@ -13,6 +13,18 @@ final class DiscountTest: XCTestCase {
 
     let cadAmount100 = Amount(currency: Currency.cad.rawValue, value: 100)
 
+
+    func testDefaultPropertyValues() {
+        // Give
+        let nilPropertiesDiscount = Discount(identifier: nil, type: .unknown, amount: nil, percentage: nil)
+
+        // When
+        // Then
+        XCTAssertEqual(nilPropertiesDiscount.identifier, "")
+        XCTAssertNil(nilPropertiesDiscount.amount)
+        XCTAssertNil(nilPropertiesDiscount.percentage)
+    }
+
     // MARK: Unknow Type Discount
     func testUnknownTypeDiscount() {
         // Give
@@ -224,6 +236,9 @@ final class DiscountTest: XCTestCase {
     }
 
     static var allTests = [
+
+        ("testDefaultPropertyValues", testDefaultPropertyValues),
+
         ("testUnknownTypeDiscount", testUnknownTypeDiscount),
 
         ("testInitWithInvalidFixedAmount", testInitWithInvalidFixedAmount),

@@ -43,11 +43,11 @@ public class Tax: Codable, Identifiable {
         case _isEnabled = "isEnabled"
     }
 
-    init(identifier: String?,
-         name: String?,
-         percentage: Double?,
-         isEnabled: Bool?,
-         applicableCategories: [ProductCategory]?) {
+    public init(identifier: String?,
+                name: String?,
+                percentage: Double?,
+                isEnabled: Bool?,
+                applicableCategories: [ProductCategory]?) {
 
         self.name = name
         self.applicableCategories = applicableCategories

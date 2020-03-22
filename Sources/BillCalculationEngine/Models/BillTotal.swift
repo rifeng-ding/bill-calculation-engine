@@ -9,8 +9,8 @@ import Foundation
 
 public struct BillTotal {
 
-    let tax: Amount
-    let total: Amount
-    let appliedDiscount: [Discount]
-    let discountedAmount: Amount
+    public let tax: Amount
+    public let total: Amount
+    public let appliedDiscount: [Discount]
+    public let discountedAmount: Amount
 }

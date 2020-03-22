@@ -80,12 +80,12 @@ public class Discount: Codable, Identifiable {
 
     /// Initialize a Discount object with all properties configable.
     ///
-    /// This initializer in private, and it's mainly for unit test usage.
+    /// This initializer in interal, and it's mainly for unit test.
     /// - Parameters:
     ///   - type: the type of the discount
     ///   - amount: the amount of the discount
     ///   - percentage: the percentage of the discount
-    private init(identifier: String, type: `Type`, amount: Amount? = nil, percentage: Double? = nil) {
+    internal init(identifier: String?, type: `Type`, amount: Amount? = nil, percentage: Double? = nil) {
 
         self._identifier = identifier
         self.type = type

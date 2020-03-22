@@ -32,6 +32,24 @@ public struct Discount: Codable, Identifiable {
     public let amount: Amount?
     public let percentage: Double?
 
+    public var isValid: Bool {
+
+        switch self.type {
+        case .fixedAmount:
+            guard let amount = self.amount else {
+                return false
+            }
+            return amount > .zero
+        case .percentage:
+            guard let percentage = self.percentage else {
+                return false
+            }
+            return percentage > 0 && percentage <= 1
+        case .unknown:
+            return false
+        }
+    }
+
     public init(identifier: String, fixedAmount: Amount) {
 
         self.identifier = identifier
@@ -44,7 +62,7 @@ public struct Discount: Codable, Identifiable {
 
         self.identifier = identifier
         self.type = .percentage
-        self.percentage = (percentage > 0 && percentage < 1) ? percentage : 1
+        self.percentage = (percentage > 0 && percentage <= 1) ? percentage : 1
         self.amount = nil
     }
 
@@ -65,16 +83,28 @@ public struct Discount: Codable, Identifiable {
     }
 
 
-    /// Initialize an percentage discount with any percentage value.
+    /// Initialize a percentage discount with any percentage value.
     ///
-    /// This initializer doesn't perform any check on the value percentage,
+    /// This initializer doesn't perform any check on the percentage value,
     /// e.g. it even can be bigger than 1 or smaller than 0.
     ///
     /// This initialzer is for unit test purpose.
     /// - Parameter anyPercentage: any percentage for the discount
-    internal init(identifier: String, withAnyPercentage anyPercentage: Double) {
+    internal init(identifier: String, anyPercentage: Double?) {
 
         self = Discount(identifier: identifier, type: .percentage, amount: nil, percentage: anyPercentage)
+    }
+
+    /// Initialize a fixed amount discount with any amount value.
+    ///
+    /// This initializer doesn't perform any check on the amount value,
+    /// e.g. it even can be a negative amount.
+    ///
+    /// This initialzer is for unit test purpose.
+    /// - Parameter anyPercentage: any fixed amount for the discount
+    internal init(identifier: String, anyFixedAmount: Amount?) {
+
+        self = Discount(identifier: identifier, type: .fixedAmount, amount: anyFixedAmount, percentage: nil)
     }
 
     /// A convenient way to get an unknown type discount.
@@ -97,7 +127,7 @@ public struct Discount: Codable, Identifiable {
             return defaultResult
             
         case .fixedAmount:
-            guard let discountAmount = self.amount, discountAmount > .zero else {
+            guard let discountAmount = self.amount, self.isValid else {
                 return defaultResult
             }
             guard let currency = Amount.shareSameCurrency(between: originalAmount, and: discountAmount) else {
@@ -110,7 +140,7 @@ public struct Discount: Codable, Identifiable {
                                           newSubtotal: newSubtotal)
 
         case .percentage:
-            guard let percentage = self.percentage, percentage > 0 && percentage < 1 else {
+            guard let percentage = self.percentage, self.isValid else {
                 return defaultResult
             }
             let discountedAmount = originalAmount.multiply(by: percentage)

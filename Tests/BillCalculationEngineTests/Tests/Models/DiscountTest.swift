@@ -34,7 +34,7 @@ final class DiscountTest: XCTestCase {
     // MARK: - Fixed Amount Discount
     func testInitWithInvalidFixedAmount() {
         // Give
-        let discount = Discount(identifier:"11111",
+        let discount = Discount(identifier:"",
                                 fixedAmount: Amount(currency: Currency.cad.rawValue, value: -10))
         // When
         // Then
@@ -74,7 +74,7 @@ final class DiscountTest: XCTestCase {
         // Give
         let cadCurrency = Currency.cad.rawValue
         let amountCad200 = Amount(currency: cadCurrency, value: 200)
-        let discountCad200 = Discount(identifier:"11111",
+        let discountCad200 = Discount(identifier:"",
                                       fixedAmount: amountCad200)
 
         // When
@@ -92,7 +92,7 @@ final class DiscountTest: XCTestCase {
 
     func testFixAmountWithInvalidCurrency() {
         // Give
-        let discountUSD20 = Discount(identifier:"11111",
+        let discountUSD20 = Discount(identifier:"",
                                      fixedAmount: Amount(currency: Currency.usd.rawValue, value: 20))
 
         do {
@@ -106,7 +106,7 @@ final class DiscountTest: XCTestCase {
 
     func testFixedAmountZeroDiscount() {
         // Give
-        let discountCad0 = Discount(identifier:"11111",
+        let discountCad0 = Discount(identifier:"",
                                     fixedAmount: Amount(currency: Currency.cad.rawValue, value: 0))
 
         // When
@@ -126,7 +126,7 @@ final class DiscountTest: XCTestCase {
 
     func testInitWithInvalidPercentage() {
         // Give
-        let discount = Discount(identifier:"11111",
+        let discount = Discount(identifier:"",
                                 percentage: 1.2)
         // When
         // Then
@@ -136,7 +136,7 @@ final class DiscountTest: XCTestCase {
 
     func testPercentageWithNonZeroResult() {
         // Give
-        let discount25Percent = Discount(identifier:"11111",
+        let discount25Percent = Discount(identifier:"",
                                          percentage: 0.25)
         // when
         // When
@@ -156,7 +156,7 @@ final class DiscountTest: XCTestCase {
     func testPercentageWithRoundingToZeroResult() {
         // Give
         let oneCent = Amount(currency: Currency.cad.rawValue, value: 0.01)
-        let discount25Percent = Discount(identifier:"11111",
+        let discount25Percent = Discount(identifier:"",
                                          percentage: 0.25)
         // When
         var result: DiscountApplyingResult?
@@ -174,8 +174,8 @@ final class DiscountTest: XCTestCase {
     // This test case may happen if the Discount is decoded from JSON
     func testPercentageWithInvalidPercentage() {
         // Give
-        let discount120Percentage = Discount(identifier:"11111",
-                                             withAnyPercentage: 1.20)
+        let discount120Percentage = Discount(identifier:"",
+                                             anyPercentage: 1.20)
         // When
         var result: DiscountApplyingResult?
         do {
@@ -186,6 +186,41 @@ final class DiscountTest: XCTestCase {
         // Then
         XCTAssertEqual(result?.discountedAmount, .zero)
         XCTAssertEqual(result?.newSubtotal, self.cadAmount100)
+    }
+
+    // MARK: - Discount Validation
+    func testDiscountValidaton() {
+        let currency = Currency.cad.rawValue
+        // Give
+        let validFixedAmount = Discount(identifier: "", anyFixedAmount: Amount(currency: currency, value: 10))
+        let zeroFixedAmount = Discount(identifier: "", anyFixedAmount: Amount(currency: currency, value: 0))
+        let negativeFixedAmount = Discount(identifier: "", anyFixedAmount: Amount(currency: currency, value: -10))
+        let nilFixedAmount = Discount(identifier: "", anyFixedAmount: nil)
+
+        let validPercentage = Discount(identifier: "", anyPercentage: 0.5)
+        let equal100Percen = Discount(identifier: "", anyPercentage: 1)
+        let zeorPercentage = Discount(identifier: "", anyPercentage: 0)
+        let negativePercentage = Discount(identifier: "", anyPercentage: -0.1)
+        let biggerThan100Percent = Discount(identifier: "", anyPercentage: 1.5)
+        let nilPercentage = Discount(identifier: "", anyPercentage: nil)
+
+        let unknown = Discount.unknown
+
+        // When
+        // Then
+        XCTAssert(validFixedAmount.isValid)
+        XCTAssertFalse(zeroFixedAmount.isValid)
+        XCTAssertFalse(negativeFixedAmount.isValid)
+        XCTAssertFalse(nilFixedAmount.isValid)
+
+        XCTAssert(validPercentage.isValid)
+        XCTAssert(equal100Percen.isValid)
+        XCTAssertFalse(zeorPercentage.isValid)
+        XCTAssertFalse(negativePercentage.isValid)
+        XCTAssertFalse(biggerThan100Percent.isValid)
+        XCTAssertFalse(nilPercentage.isValid)
+
+        XCTAssertFalse(unknown.isValid)
     }
 
     static var allTests = [
@@ -200,6 +235,8 @@ final class DiscountTest: XCTestCase {
         ("testInitWithInvalidPercentage", testInitWithInvalidPercentage),
         ("testPercentageWithNonZeroResult", testPercentageWithNonZeroResult),
         ("testPercentageWithRoundingToZeroResult", testPercentageWithRoundingToZeroResult),
-        ("testPercentageWithInvalidPercentage", testPercentageWithInvalidPercentage)
+        ("testPercentageWithInvalidPercentage", testPercentageWithInvalidPercentage),
+        
+        ("testDiscountValidaton", testDiscountValidaton)
     ]
 }

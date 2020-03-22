@@ -103,7 +103,10 @@ public class Discount: Codable, Identifiable {
     /// - Parameter anyPercentage: any percentage for the discount
     internal init(identifier: String, anyPercentage: Double?) {
 
-        self = Discount(identifier: identifier, type: .percentage, amount: nil, percentage: anyPercentage)
+        self._identifier = identifier
+        self.type = .percentage
+        self.percentage = anyPercentage
+        self.amount =  nil
     }
 
     /// Initialize a fixed amount discount with any amount value.
@@ -115,7 +118,10 @@ public class Discount: Codable, Identifiable {
     /// - Parameter anyPercentage: any fixed amount for the discount
     internal init(identifier: String, anyFixedAmount: Amount?) {
 
-        self = Discount(identifier: identifier, type: .fixedAmount, amount: anyFixedAmount, percentage: nil)
+        self._identifier = identifier
+        self.type = .fixedAmount
+        self.percentage = nil
+        self.amount =  anyFixedAmount
     }
 
     /// A convenient way to get an unknown type discount.

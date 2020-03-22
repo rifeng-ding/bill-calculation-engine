@@ -23,32 +23,8 @@ public class BillCalculationEngine {
         return subtotal
     }
 
-    // TODO: minimum purchase for the discount?
-    public static func applyDiscounts(_ discounts: [Discount], for products: [Product]) throws -> (appliedDiscounts: [Discount] , discountedAmount: Amount, newSubtotal: Amount) {
-
-        var appliedDiscounts = [Discount]()
-        var totalDiscountedAmount = Amount.zero
-        var subtotal = try self.subtotal(for: products)
-
-        guard discounts.count > 0, subtotal > .zero else {
-            return (appliedDiscounts, totalDiscountedAmount, subtotal)
-        }
-
-        for discount in discounts {
-            let result = try discount.apply(onSubtotal: subtotal)
-            guard result.discountedAmount > .zero else {
-                break
-            }
-            appliedDiscounts.append(discount)
-            // since the totalDiscountedAmount is an accumulaton of discountedAmount, the force try is safe
-            try! totalDiscountedAmount += result.discountedAmount
-            subtotal = result.newSubtotal
-        }
-
-        return (appliedDiscounts, totalDiscountedAmount, subtotal)
-    }
-
-    public static func taxAmount(for products: [Product], taxes: [Tax]) throws -> Amount {
+    public static func taxAmount(for products: [Product],
+                                 taxes: [Tax]) throws -> Amount {
 
         var taxAmount = Amount.zero
         for product in products {
@@ -56,5 +32,47 @@ public class BillCalculationEngine {
             try! taxAmount += product.taxAmount(for: taxes)
         }
         return taxAmount
+    }
+
+    // TODO: same discount can only be applied once
+    public static func total(for products: [Product],
+                             withTaxes taxes: [Tax],
+                             discounts: [Discount]) throws -> BillTotal {
+
+        let subtotal = try self.subtotal(for: products)
+        let tax = try self.taxAmount(for: products, taxes: taxes)
+        var total = try subtotal + tax
+
+        var appliedDiscounts = [Discount]()
+        var appliedDiscountIds = Set<String>()
+        var totalDiscountedAmount = Amount.zero
+
+        guard discounts.count > 0 && total > .zero else {
+            return BillTotal(tax: tax,
+                             total: total,
+                             appliedDiscount: appliedDiscounts,
+                             discountedAmount: totalDiscountedAmount)
+        }
+
+        for discount in discounts {
+            if appliedDiscountIds.contains(discount.identifier) {
+                continue
+            }
+
+            let result = try discount.apply(onSubtotal: total)
+            guard result.discountedAmount > .zero else {
+                break
+            }
+            appliedDiscountIds.insert(discount.identifier)
+            appliedDiscounts.append(discount)
+            // since the totalDiscountedAmount is an accumulaton of discountedAmount, the force try is safe
+            try! totalDiscountedAmount += result.discountedAmount
+            total = result.newSubtotal
+        }
+
+        return BillTotal(tax: tax,
+                         total: total,
+                         appliedDiscount: appliedDiscounts,
+                         discountedAmount: totalDiscountedAmount)
     }
 }

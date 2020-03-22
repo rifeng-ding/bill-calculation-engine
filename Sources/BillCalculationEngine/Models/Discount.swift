@@ -104,8 +104,8 @@ public struct Discount: Codable, Identifiable {
                 throw BillCalculationEngineErrror.invalidDiscountCurrency
             }
             // Since the above guard already checked the currency, here the force try is safe
-            let newSubtotal = subtotal >= discountAmount ? (try! subtotal - discountAmount) : subtotal
-            let discountedAmount = subtotal >= discountAmount ? discountAmount :  Amount(currency: currency, value: 0)
+            let newSubtotal = subtotal >= discountAmount ? (try! subtotal - discountAmount) : Amount(currency: currency, value: 0)
+            let discountedAmount = subtotal >= discountAmount ? discountAmount : subtotal
             return DiscountApplyingResult(discountedAmount: discountedAmount,
                                           newSubtotal: newSubtotal)
 

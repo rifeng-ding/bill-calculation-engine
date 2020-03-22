@@ -85,9 +85,9 @@ final class DiscountTest: XCTestCase {
             XCTFail("Unexcepted error: \(error)")
         }
         // Then
-        // 100 - 200 cannot be applied
-        XCTAssertEqual(result?.discountedAmount, .zero)
-        XCTAssertEqual(result?.newSubtotal, self.cadAmount100)
+        // 100 - 200 = 0 as new subtotal cannot become negative
+        XCTAssertEqual(result?.discountedAmount, self.cadAmount100)
+        XCTAssertEqual(result?.newSubtotal, .zero)
     }
 
     func testFixAmountWithInvalidCurrency() {

@@ -35,10 +35,10 @@ public struct Tax: Codable, Identifiable {
     }
     public var isEnabledOptional: Bool?
 
-    enum codingKeys: String, CodingKey {
+    public enum codingKeys: String, CodingKey {
         case name
         case applicableCategories
-        case identifierOptional = "identifierOptional"
+        case identifierOptional = "identifier"
         case percentageOptional = "percentage"
         case isEnabledOptional = "isEnabled"
     }

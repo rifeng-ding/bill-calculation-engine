@@ -87,6 +87,13 @@ public struct Amount: Codable {
 
     public static func + (left: Amount, right: Amount) throws -> Amount  {
 
+        if left.currency == nil &&
+            right.currency == nil &&
+            left.value == 0 &&
+            right.value == 0 {
+            return .zero
+        }
+
         guard let currency = self.shareSameCurrency(between: left, and: right) else {
             throw AmountCalculationError.incompatibleAmountCurrency
         }
@@ -95,6 +102,13 @@ public struct Amount: Codable {
     }
 
     public static func += (left: inout Amount, right: Amount) throws {
+
+        if left.currency == nil &&
+            right.currency == nil &&
+            left.value == 0 &&
+            right.value == 0 {
+            return
+        }
 
         guard let currency = self.shareSameCurrency(between: left, and: right) else {
             throw AmountCalculationError.incompatibleAmountCurrency
@@ -105,6 +119,13 @@ public struct Amount: Codable {
 
     public static func - (left: Amount, right: Amount) throws -> Amount  {
 
+        if left.currency == nil &&
+            right.currency == nil &&
+            left.value == 0 &&
+            right.value == 0 {
+            return .zero
+        }
+
         guard let currency = self.shareSameCurrency(between: left, and: right) else {
             throw AmountCalculationError.incompatibleAmountCurrency
         }
@@ -113,6 +134,13 @@ public struct Amount: Codable {
     }
 
     public static func -= (left: inout Amount, right: Amount) throws {
+        
+        if left.currency == nil &&
+            right.currency == nil &&
+            left.value == 0 &&
+            right.value == 0 {
+            return
+        }
 
         guard let currency = self.shareSameCurrency(between: left, and: right) else {
             throw AmountCalculationError.incompatibleAmountCurrency

@@ -14,16 +14,16 @@ public struct Amount: Codable {
     /// The currency of Amount.
     public let currency: String?
 
-    /// The value of the Amount decoded from JSON.
-    public let _value: Decimal?
-
     /// The value of the Amount.
     ///
-    /// When the _value is nil, 0 is returned.
+    /// When the value is not included in the JSON payload, 0 is returned.
     public var value: Decimal {
 
         return _value ?? 0
     }
+
+    /// The value of the Amount decoded from JSON.
+    internal let _value: Decimal?
 
     init(currency: String?, value: Decimal?) {
         self.currency = currency

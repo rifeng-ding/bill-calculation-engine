@@ -13,9 +13,23 @@ public struct Amount: Codable {
 
     /// The currency of Amount.
     public let currency: String?
-    
+
+    /// The value of the Amount decoded from JSON.
+    public let _value: Decimal?
+
     /// The value of the Amount.
-    public let value: Decimal
+    ///
+    /// When the _value is nil, 0 is returned.
+    public var value: Decimal {
+
+        return _value ?? 0
+    }
+
+    init(currency: String?, value: Decimal?) {
+        self.currency = currency
+        self._value = value
+    }
+
 
     /// Returns the currency as a String, if the two Amount objects share the same currency.
     ///

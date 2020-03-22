@@ -27,10 +27,21 @@ public struct Discount: Codable, Identifiable {
         case percentage
     }
 
-    public let identifier: String
+    public var identifier: String {
+        return self._identifier ?? ""
+    }
+    internal let _identifier: String?
+
     public let type: `Type`
     public let amount: Amount?
     public let percentage: Double?
+
+    enum codingKeys: String, CodingKey {
+        case _identifier = "identifier"
+        case type
+        case amount
+        case percentage
+    }
 
     public var isValid: Bool {
 
@@ -52,7 +63,7 @@ public struct Discount: Codable, Identifiable {
 
     public init(identifier: String, fixedAmount: Amount) {
 
-        self.identifier = identifier
+        self._identifier = identifier
         self.type = .fixedAmount
         self.amount = fixedAmount > .zero ? fixedAmount : Amount(currency: fixedAmount.currency, value: 0)
         self.percentage = nil
@@ -60,7 +71,7 @@ public struct Discount: Codable, Identifiable {
 
     public init(identifier: String, percentage: Double) {
 
-        self.identifier = identifier
+        self._identifier = identifier
         self.type = .percentage
         self.percentage = (percentage > 0 && percentage <= 1) ? percentage : 1
         self.amount = nil
@@ -76,7 +87,7 @@ public struct Discount: Codable, Identifiable {
     ///   - percentage: the percentage of the discount
     private init(identifier: String, type: `Type`, amount: Amount? = nil, percentage: Double? = nil) {
 
-        self.identifier = identifier
+        self._identifier = identifier
         self.type = type
         self.percentage = percentage
         self.amount =  amount

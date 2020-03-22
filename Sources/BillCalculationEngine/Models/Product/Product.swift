@@ -9,11 +9,44 @@ import Foundation
 
 public struct Product: Codable, Identifiable {
 
-    public let identifier: String
-    public let name: String
+    public var identifier: String {
+        return self._identifier ?? ""
+    }
+    internal var _identifier: String?
+
+    public let name: String?
     public let category: ProductCategory
-    public let price: Amount
-    public let isTaxExempt: Bool
+
+    public var price: Amount {
+        return self._price ?? .zero
+    }
+    internal var _price: Amount?
+
+    public var isTaxExempt: Bool {
+        return self._isTaxExempt ?? false
+    }
+    public let _isTaxExempt: Bool?
+
+    enum codingKeys: String, CodingKey {
+        case _identifier = "identifier"
+        case name
+        case category
+        case _price = "price"
+        case _isTaxExempt = "isTaxExempt"
+    }
+
+    init(identifier: String?,
+         name: String?,
+         category: ProductCategory,
+         price: Amount?,
+         isTaxExempt: Bool?) {
+
+        self._identifier = identifier
+        self.name = name
+        self.category = category
+        self._price = price
+        self._isTaxExempt = isTaxExempt
+    }
 
     public func taxAmount(for taxes: [Tax]) -> Amount {
 

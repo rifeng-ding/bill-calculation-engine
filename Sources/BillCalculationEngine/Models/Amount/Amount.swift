@@ -13,9 +13,28 @@ public struct Amount: Codable {
 
     /// The currency of Amount.
     public let currency: String?
-    
+
     /// The value of the Amount.
-    public let value: Decimal
+    ///
+    /// When the value is not included in the JSON payload, 0 is returned.
+    public var value: Decimal {
+
+        return _value ?? 0
+    }
+
+    /// The value of the Amount decoded from JSON.
+    internal let _value: Decimal?
+
+    init(currency: String?, value: Decimal?) {
+        self.currency = currency
+        self._value = value
+    }
+
+    enum codingKeys: String, CodingKey {
+        case currency
+        case _value = "value"
+    }
+
 
     /// Returns the currency as a String, if the two Amount objects share the same currency.
     ///

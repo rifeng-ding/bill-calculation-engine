@@ -20,7 +20,7 @@ public struct Tax: Codable, Identifiable {
     }
     public let identifierOptional: String?
 
-    public var percentage: Double {
+    public var percentageDouble: Double {
         return percentageOptional ?? 0
     }
     public let percentageOptional: Double?

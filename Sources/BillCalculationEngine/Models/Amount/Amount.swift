@@ -27,8 +27,8 @@ public struct Amount: Codable {
     }
 
     /// The value of the Amount decoded from JSON.
-    internal let valueInString: String?
-    internal let valueInDecimal: Decimal?
+    internal var valueInString: String?
+    internal var valueInDecimal: Decimal?
 
     init(currency: String?, value: Decimal?) {
         self.currency = currency
@@ -36,7 +36,7 @@ public struct Amount: Codable {
         self.valueInString = nil
     }
 
-    enum codingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case currency
         case valueInString = "value"
     }

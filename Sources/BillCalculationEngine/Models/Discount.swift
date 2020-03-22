@@ -36,7 +36,7 @@ public struct Discount: Codable, Identifiable {
     public let amount: Amount?
     public let percentage: Double?
 
-    enum codingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case _identifier = "identifier"
         case type
         case amount

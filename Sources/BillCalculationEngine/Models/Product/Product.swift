@@ -27,7 +27,7 @@ public struct Product: Codable, Identifiable {
     }
     public let _isTaxExempt: Bool?
 
-    enum codingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case _identifier = "identifier"
         case name
         case category

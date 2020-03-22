@@ -16,31 +16,31 @@ public struct Tax: Codable, Identifiable {
     public let applicableCategories: [ProductCategory]?
 
     public var identifier: String {
-        return identifierOptional ?? ""
+        return _identifier ?? ""
     }
-    public let identifierOptional: String?
+    internal let _identifier: String?
 
     public var percentage: Double {
-        return percentageOptional ?? 0
+        return _percentage ?? 0
     }
-    public let percentageOptional: Double?
+    internal let _percentage: Double?
 
     public var isEnabled: Bool {
         get {
-            return isEnabledOptional ?? false
+            return _isEnabled ?? false
         }
         set {
-            self.isEnabledOptional = newValue
+            self._isEnabled = newValue
         }
     }
-    public var isEnabledOptional: Bool?
+    internal var _isEnabled: Bool?
 
-    public enum codingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case name
         case applicableCategories
-        case identifierOptional = "identifier"
-        case percentageOptional = "percentage"
-        case isEnabledOptional = "isEnabled"
+        case _identifier = "identifier"
+        case _percentage = "percentage"
+        case _isEnabled = "isEnabled"
     }
 
     init(identifier: String?,
@@ -51,8 +51,8 @@ public struct Tax: Codable, Identifiable {
 
         self.name = name
         self.applicableCategories = applicableCategories
-        self.identifierOptional = identifier
-        self.percentageOptional = percentage
-        self.isEnabledOptional = isEnabled
+        self._identifier = identifier
+        self._percentage = percentage
+        self._isEnabled = isEnabled
     }
 }

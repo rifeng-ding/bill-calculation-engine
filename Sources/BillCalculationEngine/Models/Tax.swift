@@ -12,7 +12,7 @@ public struct Tax: Codable, Identifiable {
     public let identifier: String
     public let name: String
     public let percentage: Double
-    public let isEabled: Bool
+    public var isEnabled: Bool
     /// The category of the that the tax is applicable.
     ///
     /// When the value it's nil, means it can be applied to any of categorys

@@ -22,7 +22,7 @@ public struct Product: Codable, Identifiable {
         }
 
         var taxAmount = Amount.zero
-        for tax in taxes where tax.isEabled {
+        for tax in taxes where tax.isEnabled {
             if let applicableCategories = tax.applicableCategories,
                 !applicableCategories.contains(self.category) {
                 continue

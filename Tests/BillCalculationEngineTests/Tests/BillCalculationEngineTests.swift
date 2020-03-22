@@ -10,7 +10,7 @@ final class BillCalculationEngineTests: XCTestCase {
     private let tax = Tax(identifier: "tax id",
                           name: "test total tax",
                           percentage: 0.05,
-                          isEabled: true,
+                          isEnabled: true,
                           applicableCategories: [testingCategory])
 
     private lazy var cadProducts: [Product] = {

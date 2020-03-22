@@ -20,13 +20,13 @@ final class ProductTest: XCTestCase {
     let wineTax = Tax(identifier: "11111",
                       name: "Wine Tax",
                       percentage: 0.096,
-                      isEabled: true,
+                      isEnabled: true,
                       applicableCategories: [.alcohol])
 
     let gst = Tax(identifier: "22222",
                   name: "GST",
                   percentage: 0.05,
-                  isEabled: true,
+                  isEnabled: true,
                   applicableCategories: nil)
 
     func testProductWithApplicableTaxes () {
@@ -46,7 +46,7 @@ final class ProductTest: XCTestCase {
         let disabledTax = Tax(identifier: "33333",
                               name: "some tax",
                               percentage: 0.5,
-                              isEabled: false,
+                              isEnabled: false,
                               applicableCategories: nil)
         // When
         let taxAmount = self.wine.taxAmount(for: [wineTax, gst, disabledTax])
@@ -62,7 +62,7 @@ final class ProductTest: XCTestCase {
         let inapplicableTax = Tax(identifier: "33333",
                                   name: "imaginary appetizer & main tax",
                                   percentage: 0.15,
-                                  isEabled: true,
+                                  isEnabled: true,
                                   applicableCategories: [.appetizers, .mains])
         // When
         let taxAmount = self.wine.taxAmount(for: [wineTax, gst, inapplicableTax])

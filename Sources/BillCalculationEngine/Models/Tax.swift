@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Tax: Codable, Identifiable {
+public class Tax: Codable, Identifiable {
 
     public let name: String?
     /// The category of the that the tax is applicable.

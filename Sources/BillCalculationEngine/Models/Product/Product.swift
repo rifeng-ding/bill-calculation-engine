@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Product: Codable, Identifiable {
+public class Product: Codable, Identifiable {
 
     public var identifier: String {
         return self._identifier ?? ""

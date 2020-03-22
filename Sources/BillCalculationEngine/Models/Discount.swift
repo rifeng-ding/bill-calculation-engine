@@ -13,7 +13,7 @@ internal struct DiscountApplyingResult {
     let newSubtotal: Amount
 }
 
-public struct Discount: Codable, Identifiable {
+public class Discount: Codable, Identifiable {
 
     /// Type of the discount
     public enum `Type`: String, CaseDefaultCodable {

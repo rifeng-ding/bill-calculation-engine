@@ -21,7 +21,7 @@ final class DiscountTest: XCTestCase {
         // when
         var result: DiscountApplyingResult?
         do {
-           result = try unknownTypeDiscount.apply(onSubtotal: self.cadAmount100)
+           result = try unknownTypeDiscount.apply(onAmount: self.cadAmount100)
         } catch {
             XCTFail("Unexcepted error: \(error)")
         }
@@ -55,8 +55,8 @@ final class DiscountTest: XCTestCase {
         var resultDiscount100: DiscountApplyingResult?
 
         do {
-            resultDiscount50 = try discountCad50.apply(onSubtotal: self.cadAmount100)
-            resultDiscount100 = try discountCad100.apply(onSubtotal: self.cadAmount100)
+            resultDiscount50 = try discountCad50.apply(onAmount: self.cadAmount100)
+            resultDiscount100 = try discountCad100.apply(onAmount: self.cadAmount100)
         } catch {
             XCTFail("Unexcepted error: \(error)")
         }
@@ -80,14 +80,14 @@ final class DiscountTest: XCTestCase {
         // When
         var result: DiscountApplyingResult?
         do {
-            result = try discountCad200.apply(onSubtotal: self.cadAmount100)
+            result = try discountCad200.apply(onAmount: self.cadAmount100)
         } catch {
             XCTFail("Unexcepted error: \(error)")
         }
         // Then
-        // 100 - 200 cannot be applied
-        XCTAssertEqual(result?.discountedAmount, .zero)
-        XCTAssertEqual(result?.newSubtotal, self.cadAmount100)
+        // 100 - 200 = 0 as new subtotal cannot become negative
+        XCTAssertEqual(result?.discountedAmount, self.cadAmount100)
+        XCTAssertEqual(result?.newSubtotal, .zero)
     }
 
     func testFixAmountWithInvalidCurrency() {
@@ -97,7 +97,7 @@ final class DiscountTest: XCTestCase {
 
         do {
             // When
-            _ = try discountUSD20.apply(onSubtotal: self.cadAmount100)
+            _ = try discountUSD20.apply(onAmount: self.cadAmount100)
         } catch {
             // Then
             XCTAssertEqual(error as? BillCalculationEngineErrror, BillCalculationEngineErrror.invalidDiscountCurrency)
@@ -112,7 +112,7 @@ final class DiscountTest: XCTestCase {
         // When
         var result: DiscountApplyingResult?
         do {
-            result = try discountCad0.apply(onSubtotal: self.cadAmount100)
+            result = try discountCad0.apply(onAmount: self.cadAmount100)
         } catch {
             XCTFail("Unexcepted error: \(error)")
         }
@@ -142,7 +142,7 @@ final class DiscountTest: XCTestCase {
         // When
         var result: DiscountApplyingResult?
         do {
-            result = try discount25Percent.apply(onSubtotal: self.cadAmount100)
+            result = try discount25Percent.apply(onAmount: self.cadAmount100)
         } catch {
             XCTFail("Unexcepted error: \(error)")
         }
@@ -161,7 +161,7 @@ final class DiscountTest: XCTestCase {
         // When
         var result: DiscountApplyingResult?
         do {
-            result = try discount25Percent.apply(onSubtotal: oneCent)
+            result = try discount25Percent.apply(onAmount: oneCent)
         } catch {
             XCTFail("Unexcepted error: \(error)")
         }
@@ -179,7 +179,7 @@ final class DiscountTest: XCTestCase {
         // When
         var result: DiscountApplyingResult?
         do {
-            result = try discount120Percentage.apply(onSubtotal: self.cadAmount100)
+            result = try discount120Percentage.apply(onAmount: self.cadAmount100)
         } catch {
             XCTFail("Unexcepted error: \(error)")
         }

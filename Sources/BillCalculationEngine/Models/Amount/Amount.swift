@@ -38,7 +38,7 @@ public struct Amount: Codable {
 
     enum codingKeys: String, CodingKey {
         case currency
-        case _value = "value"
+        case valueInString = "value"
     }
 
 

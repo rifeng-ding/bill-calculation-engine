@@ -26,7 +26,12 @@ public struct Tax: Codable, Identifiable {
     internal let _percentage: Double?
 
     public var isEnabled: Bool {
-        return _isEnabled ?? false
+        get {
+            return _isEnabled ?? false
+        }
+        set {
+            self._isEnabled = newValue
+        }
     }
     internal var _isEnabled: Bool?
 

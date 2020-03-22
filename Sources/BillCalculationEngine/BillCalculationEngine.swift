@@ -34,7 +34,6 @@ public class BillCalculationEngine {
         return taxAmount
     }
 
-    // TODO: same discount can only be applied once
     public static func total(for products: [Product],
                              withTaxes taxes: [Tax],
                              discounts: [Discount]) throws -> BillTotal {
@@ -59,7 +58,7 @@ public class BillCalculationEngine {
                 continue
             }
 
-            let result = try discount.apply(onSubtotal: total)
+            let result = try discount.apply(onAmount: total)
             guard result.discountedAmount > .zero else {
                 break
             }

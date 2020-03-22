@@ -7,7 +7,6 @@
 
 import Foundation
 
-// TODO: needs to be public or internal?
 internal struct DiscountApplyingResult {
 
     let discountedAmount: Amount
@@ -87,11 +86,12 @@ public struct Discount: Codable, Identifiable {
     }
 
     // MARK: - Interanl Methods
-    // TODO: internal method throw public error seems a bit odd
-    internal func apply(onSubtotal subtotal: Amount) throws -> DiscountApplyingResult {
+    // This method is marked as internal, becuase apply discount needs business logic. So it's only exposed
+    // through BillCalculationEngine's total(for: withTaxes: taxes: discounts:), which contains the business logic.
+    internal func apply(onAmount originalAmount: Amount) throws -> DiscountApplyingResult {
 
         let defaultResult = DiscountApplyingResult(discountedAmount: .zero,
-                                                   newSubtotal: subtotal)
+                                                   newSubtotal: originalAmount)
         switch self.type {
         case .unknown:
             return defaultResult
@@ -100,12 +100,12 @@ public struct Discount: Codable, Identifiable {
             guard let discountAmount = self.amount, discountAmount > .zero else {
                 return defaultResult
             }
-            guard let currency = Amount.shareSameCurrency(between: subtotal, and: discountAmount) else {
+            guard let currency = Amount.shareSameCurrency(between: originalAmount, and: discountAmount) else {
                 throw BillCalculationEngineErrror.invalidDiscountCurrency
             }
             // Since the above guard already checked the currency, here the force try is safe
-            let newSubtotal = subtotal >= discountAmount ? (try! subtotal - discountAmount) : Amount(currency: currency, value: 0)
-            let discountedAmount = subtotal >= discountAmount ? discountAmount : subtotal
+            let newSubtotal = originalAmount >= discountAmount ? (try! originalAmount - discountAmount) : Amount(currency: currency, value: 0)
+            let discountedAmount = originalAmount >= discountAmount ? discountAmount : originalAmount
             return DiscountApplyingResult(discountedAmount: discountedAmount,
                                           newSubtotal: newSubtotal)
 
@@ -113,17 +113,17 @@ public struct Discount: Codable, Identifiable {
             guard let percentage = self.percentage, percentage > 0 && percentage < 1 else {
                 return defaultResult
             }
-            let discountedAmount = subtotal.multiply(by: percentage)
+            let discountedAmount = originalAmount.multiply(by: percentage)
             guard discountedAmount != .zero else {
                 // Since 0 < percentage < 1, if discountedAmount == 0,
                 // the only reason is subtotal is too small,
                 // e.g. subtotal = 0.01, discount = 0.25,
                 // 0.01 * 0.25 = 0.0025 ≈ 0
-                return DiscountApplyingResult(discountedAmount: subtotal,
-                                              newSubtotal: Amount(currency: subtotal.currency, value: 0))
+                return DiscountApplyingResult(discountedAmount: originalAmount,
+                                              newSubtotal: Amount(currency: originalAmount.currency, value: 0))
             }
             // since the discountedAmount is derived from the subtotal, the force try is safe
-            let newSubtotal = try! subtotal - discountedAmount
+            let newSubtotal = try! originalAmount - discountedAmount
             return DiscountApplyingResult(discountedAmount: discountedAmount,
                                           newSubtotal: newSubtotal)
         }

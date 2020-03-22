@@ -171,7 +171,7 @@ final class BillCalculationEngineTests: XCTestCase {
         let actualTotal = try! BillCalculationEngine.subtotal(for: self.cadProducts)
         let actualTax = try! BillCalculationEngine.taxAmount(for: self.cadProducts, taxes: [self.tax])
         let originalTotal = try! actualTotal + actualTax
-        let discountResult = try! discount.apply(onSubtotal: originalTotal)
+        let discountResult = try! discount.apply(onAmount: originalTotal)
         XCTAssertEqual(billTotal!.total, discountResult.newSubtotal)
         XCTAssertEqual(billTotal!.tax, actualTax)
         XCTAssertEqual(billTotal!.appliedDiscount, [discount])

@@ -47,6 +47,23 @@ final class ProductTest: XCTestCase {
         XCTAssertNil(nilPropertiesProduct.name)
     }
 
+    func testIsTaxExemptSetterAndGetter() {
+        // Give
+        let nilPropertiesProduct = Product(identifier: nil,
+                                           name: nil,
+                                           category: .unknown,
+                                           price: nil,
+                                           isTaxExempt: nil)
+        XCTAssertFalse(nilPropertiesProduct.isTaxExempt)
+
+        // When:
+        nilPropertiesProduct.isTaxExempt = true
+
+        // Then
+        XCTAssert(nilPropertiesProduct.isTaxExempt)
+    }
+
+    // MARK: - Tax Related Tests
     func testProductWithApplicableTaxes () {
         // Give: done with properties
 
@@ -107,6 +124,7 @@ final class ProductTest: XCTestCase {
 
     static var allTests = [
         ("testDefaultPropertyValues", testDefaultPropertyValues),
+        ("testIsTaxExemptSetterAndGetter", testIsTaxExemptSetterAndGetter),
         ("testProductWithApplicableTaxes", testProductWithApplicableTaxes),
         ("testProductWithDisabledTax", testProductWithDisabledTax),
         ("testProductWithInapplicableTax", testProductWithInapplicableTax),

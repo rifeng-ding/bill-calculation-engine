@@ -23,9 +23,14 @@ public class Product: Codable, Identifiable {
     internal let _price: Amount?
 
     public var isTaxExempt: Bool {
-        return self._isTaxExempt ?? false
+        get {
+            return self._isTaxExempt ?? false
+        }
+        set {
+            self._isTaxExempt = newValue
+        }
     }
-    public let _isTaxExempt: Bool?
+    internal var _isTaxExempt: Bool?
 
     enum CodingKeys: String, CodingKey {
         case _identifier = "identifier"

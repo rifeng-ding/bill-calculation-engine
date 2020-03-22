@@ -13,7 +13,7 @@ internal struct DiscountApplyingResult {
     let newSubtotal: Amount
 }
 
-public struct Discount: Codable, Identifiable {
+public class Discount: Codable, Identifiable {
 
     /// Type of the discount
     public enum `Type`: String, CaseDefaultCodable {
@@ -36,7 +36,7 @@ public struct Discount: Codable, Identifiable {
     public let amount: Amount?
     public let percentage: Double?
 
-    enum codingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case _identifier = "identifier"
         case type
         case amount
@@ -80,12 +80,12 @@ public struct Discount: Codable, Identifiable {
 
     /// Initialize a Discount object with all properties configable.
     ///
-    /// This initializer in private, and it's mainly for unit test usage.
+    /// This initializer in interal, and it's mainly for unit test.
     /// - Parameters:
     ///   - type: the type of the discount
     ///   - amount: the amount of the discount
     ///   - percentage: the percentage of the discount
-    private init(identifier: String, type: `Type`, amount: Amount? = nil, percentage: Double? = nil) {
+    internal init(identifier: String?, type: `Type`, amount: Amount? = nil, percentage: Double? = nil) {
 
         self._identifier = identifier
         self.type = type
@@ -103,7 +103,10 @@ public struct Discount: Codable, Identifiable {
     /// - Parameter anyPercentage: any percentage for the discount
     internal init(identifier: String, anyPercentage: Double?) {
 
-        self = Discount(identifier: identifier, type: .percentage, amount: nil, percentage: anyPercentage)
+        self._identifier = identifier
+        self.type = .percentage
+        self.percentage = anyPercentage
+        self.amount =  nil
     }
 
     /// Initialize a fixed amount discount with any amount value.
@@ -115,7 +118,10 @@ public struct Discount: Codable, Identifiable {
     /// - Parameter anyPercentage: any fixed amount for the discount
     internal init(identifier: String, anyFixedAmount: Amount?) {
 
-        self = Discount(identifier: identifier, type: .fixedAmount, amount: anyFixedAmount, percentage: nil)
+        self._identifier = identifier
+        self.type = .fixedAmount
+        self.percentage = nil
+        self.amount =  anyFixedAmount
     }
 
     /// A convenient way to get an unknown type discount.

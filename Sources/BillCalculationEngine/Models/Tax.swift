@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Tax: Codable, Identifiable {
+public class Tax: Codable, Identifiable {
 
     public let name: String?
     /// The category of the that the tax is applicable.
@@ -35,7 +35,7 @@ public struct Tax: Codable, Identifiable {
     }
     internal var _isEnabled: Bool?
 
-    enum codingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case name
         case applicableCategories
         case _identifier = "identifier"
@@ -43,11 +43,11 @@ public struct Tax: Codable, Identifiable {
         case _isEnabled = "isEnabled"
     }
 
-    init(identifier: String?,
-         name: String?,
-         percentage: Double?,
-         isEnabled: Bool?,
-         applicableCategories: [ProductCategory]?) {
+    public init(identifier: String?,
+                name: String?,
+                percentage: Double?,
+                isEnabled: Bool?,
+                applicableCategories: [ProductCategory]?) {
 
         self.name = name
         self.applicableCategories = applicableCategories

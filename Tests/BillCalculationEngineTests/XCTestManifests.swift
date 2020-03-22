@@ -4,6 +4,7 @@ import XCTest
 public func allTests() -> [XCTestCaseEntry] {
     return [
         // Amount
+        testCase(AmountTest.allTests),
         testCase(AmountCurrencyTest.allTests),
         testCase(AmountOperationTest.allTests),
         testCase(AmountComparableTest.allTests),
@@ -15,6 +16,8 @@ public func allTests() -> [XCTestCaseEntry] {
         testCase(IdentifiableTest.allTests),
         // CaseDefaultCodableTest
         testCase(CaseDefaultCodableTest.allTests),
+        // TaxTest
+        testCase(TaxTest.allTests),
         // BillCalculationEngine
         testCase(BillCalculationEngineTests.allTests)
     ]

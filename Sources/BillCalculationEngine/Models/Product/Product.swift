@@ -7,12 +7,12 @@
 
 import Foundation
 
-public struct Product: Codable, Identifiable {
+public class Product: Codable, Identifiable {
 
     public var identifier: String {
         return self._identifier ?? ""
     }
-    internal var _identifier: String?
+    internal let _identifier: String?
 
     public let name: String?
     public let category: ProductCategory
@@ -20,14 +20,14 @@ public struct Product: Codable, Identifiable {
     public var price: Amount {
         return self._price ?? .zero
     }
-    internal var _price: Amount?
+    internal let _price: Amount?
 
     public var isTaxExempt: Bool {
         return self._isTaxExempt ?? false
     }
     public let _isTaxExempt: Bool?
 
-    enum codingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case _identifier = "identifier"
         case name
         case category
@@ -35,11 +35,11 @@ public struct Product: Codable, Identifiable {
         case _isTaxExempt = "isTaxExempt"
     }
 
-    init(identifier: String?,
-         name: String?,
-         category: ProductCategory,
-         price: Amount?,
-         isTaxExempt: Bool?) {
+    public init(identifier: String?,
+                name: String?,
+                category: ProductCategory,
+                price: Amount?,
+                isTaxExempt: Bool?) {
 
         self._identifier = identifier
         self.name = name

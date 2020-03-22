@@ -29,6 +29,24 @@ final class ProductTest: XCTestCase {
                   isEnabled: true,
                   applicableCategories: nil)
 
+    func testDefaultPropertyValues() {
+        // Give
+        let nilPropertiesProduct = Product(identifier: nil,
+                                           name: nil,
+                                           category: .unknown,
+                                           price: nil,
+                                           isTaxExempt: nil)
+
+        // When
+        // Then
+        XCTAssertEqual(nilPropertiesProduct.identifier, "")
+        XCTAssertEqual(nilPropertiesProduct.price, .zero)
+
+        XCTAssertFalse(nilPropertiesProduct.isTaxExempt)
+
+        XCTAssertNil(nilPropertiesProduct.name)
+    }
+
     func testProductWithApplicableTaxes () {
         // Give: done with properties
 
@@ -88,6 +106,7 @@ final class ProductTest: XCTestCase {
     }
 
     static var allTests = [
+        ("testDefaultPropertyValues", testDefaultPropertyValues),
         ("testProductWithApplicableTaxes", testProductWithApplicableTaxes),
         ("testProductWithDisabledTax", testProductWithDisabledTax),
         ("testProductWithInapplicableTax", testProductWithInapplicableTax),

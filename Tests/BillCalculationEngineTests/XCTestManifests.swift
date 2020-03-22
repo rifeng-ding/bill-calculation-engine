@@ -12,6 +12,7 @@ public func allTests() -> [XCTestCaseEntry] {
         testCase(DiscountTest.allTests),
         // Product
         testCase(ProductTest.allTests),
+        testCase(ProductNSCopyingTest.allTests),
         // Identifiable
         testCase(IdentifiableTest.allTests),
         // CaseDefaultCodableTest

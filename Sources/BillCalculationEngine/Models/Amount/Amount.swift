@@ -19,15 +19,21 @@ public struct Amount: Codable {
     /// When the value is not included in the JSON payload, 0 is returned.
     public var value: Decimal {
 
-        return _value ?? 0
+        if let valueInDecimal = self.valueInDecimal {
+            return valueInDecimal
+        }
+        let fromString = Decimal(string: valueInString ?? "0")
+        return fromString ?? 0
     }
 
     /// The value of the Amount decoded from JSON.
-    internal let _value: Decimal?
+    internal let valueInString: String?
+    internal let valueInDecimal: Decimal?
 
     init(currency: String?, value: Decimal?) {
         self.currency = currency
-        self._value = value
+        self.valueInDecimal = value
+        self.valueInString = nil
     }
 
     enum codingKeys: String, CodingKey {

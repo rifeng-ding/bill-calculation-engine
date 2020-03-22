@@ -18,12 +18,12 @@ public struct Tax: Codable, Identifiable {
     public var identifier: String {
         return _identifier ?? ""
     }
-    internal let _identifier: String?
+    public let _identifier: String?
 
     public var percentage: Double {
         return _percentage ?? 0
     }
-    internal let _percentage: Double?
+    public let _percentage: Double?
 
     public var isEnabled: Bool {
         get {
@@ -33,7 +33,7 @@ public struct Tax: Codable, Identifiable {
             self._isEnabled = newValue
         }
     }
-    internal var _isEnabled: Bool?
+    public var _isEnabled: Bool?
 
     enum codingKeys: String, CodingKey {
         case name

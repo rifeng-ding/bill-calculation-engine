@@ -40,6 +40,7 @@ final class ProductNSCopyingTest: XCTestCase {
         // ebcuase Product conforms to Identifiable
         XCTAssertEqual(orginalProduct, copiedProduct)
         XCTAssertEqual(orginalProduct.name, copiedProduct.name)
+        XCTAssertEqual(orginalProduct.category, copiedProduct.category)
         XCTAssertEqual(orginalProduct.price, copiedProduct.price)
         XCTAssertEqual(orginalProduct.isTaxExempt, copiedProduct.isTaxExempt)
 

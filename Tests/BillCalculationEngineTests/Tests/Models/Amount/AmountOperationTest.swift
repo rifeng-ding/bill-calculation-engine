@@ -25,6 +25,29 @@ final class AmountOperationTest: XCTestCase {
         self.usdAmountLarge = Amount(currency: Currency.usd.rawValue, value: self.intValueLarge)
     }
 
+    func testOperationsOnZero() {
+
+        do {
+            // Give
+            var zeroForAdditon = Amount.zero
+            var zeroForSubtaction = Amount.zero
+
+            // When
+            let additon = try Amount.zero + Amount.zero
+            let subtraction = try Amount.zero - Amount.zero
+            try zeroForAdditon += Amount.zero
+            try zeroForSubtaction -= Amount.zero
+
+            // Then
+            XCTAssertEqual(additon, .zero)
+            XCTAssertEqual(subtraction, .zero)
+            XCTAssertEqual(zeroForAdditon, .zero)
+            XCTAssertEqual(zeroForSubtaction, .zero)
+        } catch {
+            XCTFail("Unexcepted error: \(error)")
+        }
+    }
+
     func testValidAddition() {
         // Give: done in setUp
 
@@ -127,6 +150,7 @@ final class AmountOperationTest: XCTestCase {
     }
 
     static var allTests = [
+        ("testOperationsOnZero", testOperationsOnZero),
         ("testValidAddition", testValidAddition),
         ("testIncompatibleCurrencyAddition", testIncompatibleCurrencyAddition),
         ("testValidSubtraction", testValidSubtraction),

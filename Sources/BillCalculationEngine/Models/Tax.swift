@@ -20,7 +20,7 @@ public struct Tax: Codable, Identifiable {
     }
     public let identifierOptional: String?
 
-    public var percentageDouble: Double {
+    public var percentage: Double {
         return percentageOptional ?? 0
     }
     public let percentageOptional: Double?
@@ -38,7 +38,7 @@ public struct Tax: Codable, Identifiable {
     enum codingKeys: String, CodingKey {
         case name
         case applicableCategories
-        case identifierOptional = "identifier"
+        case identifierOptional = "identifierOptional"
         case percentageOptional = "percentage"
         case isEnabledOptional = "isEnabled"
     }

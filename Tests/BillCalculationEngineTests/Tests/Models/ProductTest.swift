@@ -36,8 +36,8 @@ final class ProductTest: XCTestCase {
         let taxAmount = self.wine.taxAmount(for: [wineTax, gst])
 
         // Then
-        let wineTaxAmount = self.wine.price.multiply(by: wineTax.percentageDouble)
-        let gstAmount = self.wine.price.multiply(by: gst.percentageDouble)
+        let wineTaxAmount = self.wine.price.multiply(by: wineTax.percentage)
+        let gstAmount = self.wine.price.multiply(by: gst.percentage)
         XCTAssertEqual(taxAmount, try! wineTaxAmount + gstAmount)
     }
 
@@ -52,8 +52,8 @@ final class ProductTest: XCTestCase {
         let taxAmount = self.wine.taxAmount(for: [wineTax, gst, disabledTax])
 
         // Then
-        let wineTaxAmount = self.wine.price.multiply(by: wineTax.percentageDouble)
-        let gstAmount = self.wine.price.multiply(by: gst.percentageDouble)
+        let wineTaxAmount = self.wine.price.multiply(by: wineTax.percentage)
+        let gstAmount = self.wine.price.multiply(by: gst.percentage)
         XCTAssertEqual(taxAmount, try! wineTaxAmount + gstAmount)
     }
 
@@ -68,8 +68,8 @@ final class ProductTest: XCTestCase {
         let taxAmount = self.wine.taxAmount(for: [wineTax, gst, inapplicableTax])
 
         // Then
-        let wineTaxAmount = self.wine.price.multiply(by: wineTax.percentageDouble)
-        let gstAmount = self.wine.price.multiply(by: gst.percentageDouble)
+        let wineTaxAmount = self.wine.price.multiply(by: wineTax.percentage)
+        let gstAmount = self.wine.price.multiply(by: gst.percentage)
         XCTAssertEqual(taxAmount, try! wineTaxAmount + gstAmount)
     }
 

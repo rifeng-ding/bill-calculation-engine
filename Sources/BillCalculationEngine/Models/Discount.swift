@@ -134,7 +134,7 @@ public class Discount: Codable, Identifiable {
 
     // MARK: - Interanl Methods
     // This method is marked as internal, becuase apply discount needs business logic. So it's only exposed
-    // through BillCalculationEngine's total(for: withTaxes: taxes: discounts:), which contains the business logic.
+    // through BillCalculationEngine's bill(for: withTaxes: taxes: discounts:), which contains the business logic.
     internal func apply(onAmount originalAmount: Amount) throws -> DiscountApplyingResult {
 
         let defaultResult = DiscountApplyingResult(discountedAmount: .zero,

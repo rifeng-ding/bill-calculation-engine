@@ -26,8 +26,12 @@ public struct Amount: Codable {
         return fromString ?? 0
     }
 
-    /// The value of the Amount decoded from JSON.
+    /// The value of the Amount in String,
+    /// which is used when the object is decoded from JSON.
     internal var valueInString: String?
+
+    /// The value of the Amount in Decimal,
+    /// which is used when the object is initialized using the initializer.
     internal var valueInDecimal: Decimal?
 
     public init(currency: String?, value: Decimal?) {

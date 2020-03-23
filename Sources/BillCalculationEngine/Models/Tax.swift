@@ -12,7 +12,7 @@ public class Tax: Codable, Identifiable {
     public let name: String?
     /// The category of the that the tax is applicable.
     ///
-    /// When the value it's nil, means it can be applied to any of categorys
+    /// When the value it's nil, means it can be applied to any of categorys.
     public let applicableCategories: [ProductCategory]?
 
     public var identifier: String {

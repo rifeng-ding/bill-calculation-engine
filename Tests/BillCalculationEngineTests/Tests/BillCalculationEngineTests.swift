@@ -82,9 +82,9 @@ final class BillCalculationEngineTests: XCTestCase {
         // Give: done by properties
 
         // When
-        var billTotal: BillTotal?
+        var bill: Bill?
         do {
-            billTotal = try BillCalculationEngine.total(for: self.cadProducts,
+            bill = try BillCalculationEngine.bill(for: self.cadProducts,
                                                         withTaxes: [self.tax],
                                                         discounts: [])
         } catch {
@@ -94,10 +94,10 @@ final class BillCalculationEngineTests: XCTestCase {
         // Then
         let actualTotal = try! BillCalculationEngine.subtotal(for: self.cadProducts)
         let actualTax = try! BillCalculationEngine.taxAmount(for: self.cadProducts, taxes: [self.tax])
-        XCTAssertEqual(billTotal!.total, try! actualTotal + actualTax)
-        XCTAssertEqual(billTotal!.tax, actualTax)
-        XCTAssertEqual(billTotal!.appliedDiscount, [])
-        XCTAssertEqual(billTotal!.discountedAmount, .zero)
+        XCTAssertEqual(bill!.total, try! actualTotal + actualTax)
+        XCTAssertEqual(bill!.tax, actualTax)
+        XCTAssertEqual(bill!.appliedDiscounts, [])
+        XCTAssertEqual(bill!.discountedAmount, .zero)
     }
 
     /// When applying two discounts, if the first discout already reduce the total to zero,
@@ -131,9 +131,9 @@ final class BillCalculationEngineTests: XCTestCase {
         }
 
         // When
-        var billTotal: BillTotal?
+        var bill: Bill?
         do {
-            billTotal = try BillCalculationEngine.total(for: self.cadProducts,
+            bill = try BillCalculationEngine.bill(for: self.cadProducts,
                                                         withTaxes: [self.tax],
                                                         discounts: discounts)
         } catch {
@@ -144,10 +144,10 @@ final class BillCalculationEngineTests: XCTestCase {
         let actualTotal = try! BillCalculationEngine.subtotal(for: self.cadProducts)
         let actualTax = try! BillCalculationEngine.taxAmount(for: self.cadProducts, taxes: [self.tax])
         let originalTotal = try! actualTotal + actualTax
-        XCTAssertEqual(billTotal!.total, .zero)
-        XCTAssertEqual(billTotal!.tax, actualTax)
-        XCTAssertEqual(billTotal!.appliedDiscount, [discounts[0]])
-        XCTAssertEqual(billTotal!.discountedAmount, originalTotal)
+        XCTAssertEqual(bill!.total, .zero)
+        XCTAssertEqual(bill!.tax, actualTax)
+        XCTAssertEqual(bill!.appliedDiscounts, [discounts[0]])
+        XCTAssertEqual(bill!.discountedAmount, originalTotal)
     }
 
     /// One disocunt can only be applied once
@@ -158,9 +158,9 @@ final class BillCalculationEngineTests: XCTestCase {
         let discount = Discount(identifier: "123", fixedAmount: amount)
 
         // When
-        var billTotal: BillTotal?
+        var bill: Bill?
         do {
-            billTotal = try BillCalculationEngine.total(for: self.cadProducts,
+            bill = try BillCalculationEngine.bill(for: self.cadProducts,
                                                         withTaxes: [self.tax],
                                                         discounts: [discount, discount])
         } catch {
@@ -172,10 +172,10 @@ final class BillCalculationEngineTests: XCTestCase {
         let actualTax = try! BillCalculationEngine.taxAmount(for: self.cadProducts, taxes: [self.tax])
         let originalTotal = try! actualTotal + actualTax
         let discountResult = try! discount.apply(onAmount: originalTotal)
-        XCTAssertEqual(billTotal!.total, discountResult.newSubtotal)
-        XCTAssertEqual(billTotal!.tax, actualTax)
-        XCTAssertEqual(billTotal!.appliedDiscount, [discount])
-        XCTAssertEqual(billTotal!.discountedAmount, discountResult.discountedAmount)
+        XCTAssertEqual(bill!.total, discountResult.newSubtotal)
+        XCTAssertEqual(bill!.tax, actualTax)
+        XCTAssertEqual(bill!.appliedDiscounts, [discount])
+        XCTAssertEqual(bill!.discountedAmount, discountResult.discountedAmount)
     }
 
     static var allTests = [

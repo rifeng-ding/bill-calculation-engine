@@ -13,27 +13,45 @@ internal struct DiscountApplyingResult {
     let newSubtotal: Amount
 }
 
+/// The discount object for the BillCalculationEngine.
 public class Discount: Codable, Identifiable {
 
     /// Type of the discount
+    ///
+    /// Since `Discount.Type` conforms to `CaseDefault`
+    /// with `defaultCase` set to `unknown`,
+    /// during decoding, any unmatched raw value, will ends up as `unknown`.
     public enum `Type`: String, CaseDefaultCodable {
 
         public static var defaultCase: Discount.`Type` = .unknown
 
+        /// Unknown type. During decoding, any unmatched raw value, will ends up as `unknown`.
         case unknown
-        /// The discount direclty reduce the subtotal by a fixed amount.
+        /// The discount type that  direclty reduces the subtotal by a fixed amount.
         case fixedAmount
-        /// The discount reduece the subtotal by a given percentage.
+        /// The discount type that redueces the subtotal by a given percentage.
         case percentage
     }
-
+    
+    /// The identifier of the discount.
+    ///
+    /// The default value is "" (empty string).
     public var identifier: String {
         return self._identifier ?? ""
     }
     internal let _identifier: String?
 
+    /// The type of the discount.
     public let type: `Type`
+    
+    /// The amount of the discount.
+    ///
+    /// If the type of the discount is `percentage`, this property is always nil.
     public let amount: Amount?
+    
+    /// The percenate of the discount.
+    ///
+    /// If the type of the discount is `fixedAmount`, this property is always nil.
     public let percentage: Double?
 
     enum CodingKeys: String, CodingKey {
@@ -43,6 +61,12 @@ public class Discount: Codable, Identifiable {
         case percentage
     }
 
+    /// A boolean value indicating whether the discount is valid.
+    ///
+    /// When a discount is being applied through apply(onAmount:),
+    /// this value is checked and only valid discount will be applied.
+    ///
+    /// For example, percentage discount with its `percentage > 1` is considered as invalid.
     public var isValid: Bool {
 
         switch self.type {
@@ -160,7 +184,7 @@ public class Discount: Codable, Identifiable {
             guard let percentage = self.percentage, self.isValid else {
                 return defaultResult
             }
-            let discountedAmount = originalAmount.multiply(by: percentage)
+            let discountedAmount = originalAmount * percentage
             guard discountedAmount != .zero else {
                 // Since 0 < percentage < 1, if discountedAmount == 0,
                 // the only reason is subtotal is too small,

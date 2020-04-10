@@ -7,6 +7,10 @@
 
 import Foundation
 
+/// The amount object for the BillCalculationEngine.
+///
+/// Currency is built into the Amount struct, to all kind of mathematic operations can only be performed between amount with the same currency.
+/// When different currency is detected, corresponding errors/exceptions will be thrown.
 public struct Amount: Codable {
 
     static private let currencyFractionDigits = 2
@@ -65,7 +69,7 @@ public struct Amount: Codable {
     /// 3. If both objects has nil as currency, nil is returned.
     ///
     /// - Parameters:
-    ///   - left: An Amount object to compare
+    ///   - left: An Amount object to compare.
     ///   - right: Another Amount object to compare.
     public static func shareSameCurrency(between left: Amount, and right: Amount)-> String? {
 
@@ -83,12 +87,20 @@ public struct Amount: Codable {
         }
         return nonNilCurrencyAmount.currency
     }
-
+    
+    /// A zero amount object, with nil as its currency.
     public static var zero: Amount {
 
         return Amount(currency: nil, value: 0)
     }
-
+    
+    /// Addition operator.
+    /// - Parameters:
+    ///   - left: An Amount object to add.
+    ///   - right: Another Amount object to add.
+    /// - Throws: If the left and right operands doesn't share the same currency,
+    /// an `incompatibleAmountCurrency` will be thrown.
+    /// - Returns: The sum of the two Amount objects.
     public static func + (left: Amount, right: Amount) throws -> Amount  {
 
         if left.currency == nil &&
@@ -105,6 +117,12 @@ public struct Amount: Codable {
         return Amount(currency: currency, value: left.value + right.value)
     }
 
+    /// Addition assignment operator.
+    /// - Parameters:
+    ///   - left: The Amount object to add on.
+    ///   - right: The Amount object be added.
+    /// - Throws: If the left and right operands doesn't share the same currency,
+    /// an `incompatibleAmountCurrency` will be thrown.
     public static func += (left: inout Amount, right: Amount) throws {
 
         if left.currency == nil &&
@@ -121,6 +139,13 @@ public struct Amount: Codable {
         left = Amount(currency: currency, value: left.value + right.value)
     }
 
+    /// Subtraction operator.
+    /// - Parameters:
+    ///   - left: The minuend Amount object.
+    ///   - right: The subtrahend Amount object.
+    /// - Throws: If the left and right operands doesn't share the same currency,
+    /// an `incompatibleAmountCurrency` will be thrown.
+    /// - Returns: The difference between of the two Amount objects.
     public static func - (left: Amount, right: Amount) throws -> Amount  {
 
         if left.currency == nil &&
@@ -137,6 +162,12 @@ public struct Amount: Codable {
         return Amount(currency: currency, value: left.value - right.value)
     }
 
+    /// Subtraction assignment c.
+    /// - Parameters:
+    ///   - left: The minuend Amount object.
+    ///   - right: The subtrahend Amount object.
+    /// - Throws: If the left and right operands doesn't share the same currency,
+    /// an `incompatibleAmountCurrency` will be thrown.
     public static func -= (left: inout Amount, right: Amount) throws {
         
         if left.currency == nil &&
@@ -152,9 +183,17 @@ public struct Amount: Codable {
 
         left = Amount(currency: currency, value: left.value - right.value)
     }
-
-    public func multiply(by multiplier: Double) -> Amount {
-
+    
+    /// Multiplication multiplication.
+    /// - Parameters:
+    ///   - amount: The Amount object to be multiplied.
+    ///   - multiplier: The multiplier.
+    /// - Returns: The amount of product the input amount and multiplier.
+    ///
+    /// The type of the multiplier is Double. This is because this method is meant to be used for
+    /// calculating the amount of tax or the discounted amount of a percentage discount.
+    public static func * (amount: Amount, multiplier: Double) -> Amount {
+    
         let twoDigitFractionHandler = NSDecimalNumberHandler(roundingMode: NSDecimalNumber.RoundingMode.plain,
                                                              scale: Int16(Self.currencyFractionDigits),
                                                              raiseOnExactness: false,
@@ -163,12 +202,23 @@ public struct Amount: Codable {
                                                              raiseOnDivideByZero: false)
 
         let multiplierDecimal = NSDecimalNumber(value: multiplier)
-        let result = (self.value as NSDecimalNumber).multiplying(by: multiplierDecimal, withBehavior: twoDigitFractionHandler)
-        return Amount(currency: self.currency, value: result as Decimal)
+        let result = (amount.value as NSDecimalNumber).multiplying(by: multiplierDecimal, withBehavior: twoDigitFractionHandler)
+        return Amount(currency: amount.currency, value: result as Decimal)
     }
 
-    public func divide(by divisor: Int) -> Amount {
+    
+    /// Division operator
+    /// - Parameters:
+    ///   - amount: The Amount object to be divided.
+    ///   - divisor: The divisor.
+    /// - Returns: The amount of the quotien betwen the input amount and divisor.
+    ///
+    /// The type of the divisor is Int. This is because this method is meant to be used for dividing an amount
+    /// into several equal parts, such as calculating separat bill amount.
+    ///
+    /// Right now, this operator is not used by Bill Calculation Engine yet.
+    public static func / (amount: Amount, divisor: Int) -> Amount {
         
-        return self.multiply(by: 1 / Double(divisor))
+        return amount * (1 / Double(divisor))
     }
 }

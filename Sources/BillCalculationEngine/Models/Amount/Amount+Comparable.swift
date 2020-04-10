@@ -21,7 +21,6 @@ extension Amount: Comparable {
         return lhs.value < rhs.value
     }
 
-
     /// Returns a Boolean value indicating whether two Amount objects are equal.
     ///
     /// If any one of the two Amount object has 0 as value, the currency of the two objects are ignored.

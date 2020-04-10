@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// The bill object for the BillCalculationEngine.
 public struct Bill {
 
     /// The sum of price of all products on the bill, exclude taxes and discounts.

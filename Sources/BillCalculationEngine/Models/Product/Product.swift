@@ -7,21 +7,34 @@
 
 import Foundation
 
+/// The product object for the BillCalculationEngine.
 public class Product: Codable, Identifiable {
-
+    
+    /// The identifer of the product.
+    ///
+    /// The default value is "" (empty string).
     public var identifier: String {
         return self._identifier ?? ""
     }
     internal let _identifier: String?
-
+    
+    /// The name of the product.
     public let name: String?
+    
+    /// The category of the product.
     public let category: ProductCategory
 
+    /// The price of the product.
+    ///
+    /// The default value is a zero amount, with `nil` as currency.
     public var price: Amount {
         return self._price ?? .zero
     }
     internal let _price: Amount?
 
+    /// A boolean value indicatiing whether the product should be exempted from taxes.
+    ///
+    /// the default value is `false`.
     public var isTaxExempt: Bool {
         get {
             return self._isTaxExempt ?? false
@@ -52,7 +65,16 @@ public class Product: Codable, Identifiable {
         self._price = price
         self._isTaxExempt = isTaxExempt
     }
-
+    
+    /// Calculate the amount of tax for given taxes.
+    /// - Parameter taxes: Taxes to be applied on the product.
+    /// - Returns: The amount of tax.
+    ///
+    /// If the product has `isTaxExempt == true`,
+    /// then a zero amount with the product's price's currency is returned.
+    ///
+    /// Otherwise, the amount of tax is calcuated based on
+    /// each input tax's `applicableCategories` and the product's category.
     public func taxAmount(for taxes: [Tax]) -> Amount {
 
         guard !self.isTaxExempt else {

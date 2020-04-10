@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Errors that could happen during the bill generation.
 public enum BillCalculationEngineErrror: Error {
 
     /// The input products doesn't have the same currency

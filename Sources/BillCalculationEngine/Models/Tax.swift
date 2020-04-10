@@ -7,24 +7,36 @@
 
 import Foundation
 
+/// The tax object for the BillCalculationEngine.
 public class Tax: Codable, Identifiable {
 
+    /// The name of the tax.
     public let name: String?
+    
     /// The category of the that the tax is applicable.
     ///
-    /// When the value it's nil, means it can be applied to any of categorys.
+    /// When the value is nil, it means the tax can be applied to any of categories.
     public let applicableCategories: [ProductCategory]?
 
+    /// The identifer of the tax.
+    ///
+    /// The default value is an empty string.
     public var identifier: String {
         return _identifier ?? ""
     }
     internal let _identifier: String?
 
+    /// The percentage of the tax.
+    ///
+    /// The default value is 0.
     public var percentage: Double {
         return _percentage ?? 0
     }
     internal let _percentage: Double?
 
+    /// A boolean value indicating if the tax is enabled.
+    ///
+    /// The default value is `false`.
     public var isEnabled: Bool {
         get {
             return _isEnabled ?? false

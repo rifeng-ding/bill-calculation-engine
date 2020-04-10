@@ -7,8 +7,7 @@
 
 import Foundation
 
-/// The amount that reprecents the value of price for a pruduct, amonut of the bill's subtotal or total
-/// or the amount of tax.
+/// The amount object for the BillCalculationEngine.
 ///
 /// Currency is built into the Amount struct, to all kind of mathematic operations can only be performed between amount with the same currency.
 /// When different currency is detected, corresponding errors/exceptions will be thrown.

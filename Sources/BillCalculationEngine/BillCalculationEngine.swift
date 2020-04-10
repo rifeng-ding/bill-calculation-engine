@@ -63,6 +63,12 @@ public class BillCalculationEngine {
     /// 3. Discounts will be applied in the same order of how they are passed in through `discounts`.
     /// If any number of discounts at the top of the array, have already brought the total of the bill to 0,
     /// then the remaining discount(s) won't be applied, and won't be included in `appliedDiscounts` of the returned `Bill` object.
+    ///
+    /// 4. Please note that no stand-alone method is provided for applying discount(s) on a given amount.
+    /// This is on prupose for avoiding violation of business logic,
+    /// i.e. discounts should be applied in the same order of how they are passed into the bill calculation method.
+    /// If any number of discounts at the top of the array, have already brought the total of the bill to 0,
+    /// then the remaining discount(s) won't be applied, and won't be included in appliedDiscounts of the returned Bill object.
     public static func bill(for products: [Product],
                              withTaxes taxes: [Tax],
                              discounts: [Discount]) throws -> Bill {

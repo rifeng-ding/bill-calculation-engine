@@ -66,7 +66,7 @@ public class Product: Codable, Identifiable {
                 continue
             }
             // since taxAmount is accumulation of the calculations' results, the force try here is safe.
-            try! taxAmount += price.multiply(by: tax.percentage)
+            try! taxAmount += price * tax.percentage
         }
         return taxAmount
     }

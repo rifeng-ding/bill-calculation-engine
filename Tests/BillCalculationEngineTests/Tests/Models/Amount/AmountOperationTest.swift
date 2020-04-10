@@ -130,7 +130,7 @@ final class AmountOperationTest: XCTestCase {
 
         // When
         // 0.5 * 0.05 = 0.025 ≈ 0.03
-        let result = amount.multiply(by: 0.05)
+        let result = amount * 0.05
         // Then
         XCTAssertEqual(result.value, Decimal(string: "0.03"))
         XCTAssertEqual(result.currency, Currency.cad.rawValue)
@@ -142,7 +142,7 @@ final class AmountOperationTest: XCTestCase {
 
         // When
         // 10 / 3 = 3.33333 ≈ 3.33
-        let result = amount.divide(by: 3)
+        let result = amount / 3
 
         // Then
         XCTAssertEqual(result.value, Decimal(string: "3.33"))

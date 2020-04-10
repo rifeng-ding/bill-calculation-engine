@@ -160,7 +160,7 @@ public class Discount: Codable, Identifiable {
             guard let percentage = self.percentage, self.isValid else {
                 return defaultResult
             }
-            let discountedAmount = originalAmount.multiply(by: percentage)
+            let discountedAmount = originalAmount * percentage
             guard discountedAmount != .zero else {
                 // Since 0 < percentage < 1, if discountedAmount == 0,
                 // the only reason is subtotal is too small,
